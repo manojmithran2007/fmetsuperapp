@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design System Showcase - College Bus Management</title>
+  <meta name="description" content="Official Design System Showcase for College Bus Management Platform. Colors, typography, spacing, radius, shadows, and component references.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <!-- Header Navigation -->
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" aria-label="Main Navigation">
+        <a href="index.html" class="nav-brand">
+          <span class="brand-badge" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-1.1 0-2 .9-2 2v7h2"/>
+              <circle cx="7" cy="17" r="2"/>
+              <path d="M9 17h6"/>
+              <circle cx="17" cy="17" r="2"/>
+            </svg>
+          </span>
+          <span>College Bus Transit</span>
+        </a>
+
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="design-system.html" class="nav-link active">Design System</a></li>
+          <li><a href="register.html" class="nav-link">Staff Registration</a></li>
+          <li><a href="login.html" class="btn btn-primary btn-sm">Sign In</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <!-- Showcase Intro -->
+      <div style="margin-bottom: var(--spacing-8);">
+        <div class="hero-tag">Design System Source of Truth</div>
+        <h1 style="font-size: var(--font-size-3xl); margin-bottom: var(--spacing-2);">Visual Tokens & Component Architecture</h1>
+        <p style="color: var(--color-text-muted); max-width: 800px;">
+          This showcase page demonstrates the institutional visual tokens for colors, typography, spacing, radius, shadows, and interactive components implemented across the College Bus Management Platform.
+        </p>
+      </div>
+
+      <!-- Quick Navigation -->
+      <div class="card" style="margin-bottom: var(--spacing-8); padding: var(--spacing-4);">
+        <div class="flex items-center gap-4 flex-wrap">
+          <span style="font-weight: var(--font-weight-bold); font-size: var(--font-size-sm);">Jump to:</span>
+          <a href="#section-colors" class="badge badge-primary">1. Colors</a>
+          <a href="#section-typography" class="badge">2. Typography</a>
+          <a href="#section-spacing" class="badge">3. Spacing</a>
+          <a href="#section-radius" class="badge">4. Radius</a>
+          <a href="#section-shadows" class="badge">5. Shadows</a>
+          <a href="#section-components" class="badge badge-success">6. Components</a>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           1. COLOR PALETTES
+           ==================================================================== -->
+      <section id="section-colors" class="showcase-section">
+        <div class="showcase-header">
+          <h2 class="showcase-title">1. Color Palettes</h2>
+          <p class="showcase-subtitle">Harmonious institutional colors tailored for collegiate transit logistics</p>
+        </div>
+
+        <!-- Primary Palette -->
+        <h3 style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-3); color: var(--color-primary-800);">
+          Primary Palette (Collegiate Crimson / Bus Red)
+        </h3>
+        <div class="palette-grid">
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-primary-50);"></div><div class="swatch-meta"><span class="swatch-token">Primary 50</span><span class="swatch-hex">#fef2f3</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-primary-100);"></div><div class="swatch-meta"><span class="swatch-token">Primary 100</span><span class="swatch-hex">#fde6e8</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-primary-200);"></div><div class="swatch-meta"><span class="swatch-token">Primary 200</span><span class="swatch-hex">#fbd0d5</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-primary-300);"></div><div class="swatch-meta"><span class="swatch-token">Primary 300</span><span class="swatch-hex">#f7aab3</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-primary-400);"></div><div class="swatch-meta"><span class="swatch-token">Primary 400</span><span class="swatch-hex">#f17585</span></div></div>
+          <div class="swatch-card" style="border: 2px solid var(--color-neutral-900);"><div class="swatch-color" style="background-color: var(--color-primary-500);"></div><div class="swatch-meta"><span class="swatch-token">Primary 500</span><span class="swatch-hex">#e51a35</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-primary-600);"></div><div class="swatch-meta"><span class="swatch-token">Primary 600</span><span class="swatch-hex">#cc112b</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-primary-700);"></div><div class="swatch-meta"><span class="swatch-token">Primary 700</span><span class="swatch-hex">#ab0d23</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-primary-800);"></div><div class="swatch-meta"><span class="swatch-token">Primary 800</span><span class="swatch-hex">#8c0f20</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-primary-900);"></div><div class="swatch-meta"><span class="swatch-token">Primary 900</span><span class="swatch-hex">#75121f</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-primary-950);"></div><div class="swatch-meta"><span class="swatch-token">Primary 950</span><span class="swatch-hex">#41040c</span></div></div>
+        </div>
+
+        <!-- Secondary Palette -->
+        <h3 style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-3); color: var(--color-secondary-800);">
+          Secondary Palette (Institutional Navy / Slate)
+        </h3>
+        <div class="palette-grid">
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-secondary-50);"></div><div class="swatch-meta"><span class="swatch-token">Secondary 50</span><span class="swatch-hex">#f0f4f8</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-secondary-100);"></div><div class="swatch-meta"><span class="swatch-token">Secondary 100</span><span class="swatch-hex">#d9e2ec</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-secondary-200);"></div><div class="swatch-meta"><span class="swatch-token">Secondary 200</span><span class="swatch-hex">#bcccdc</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-secondary-300);"></div><div class="swatch-meta"><span class="swatch-token">Secondary 300</span><span class="swatch-hex">#9fb3c8</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-secondary-400);"></div><div class="swatch-meta"><span class="swatch-token">Secondary 400</span><span class="swatch-hex">#829ab1</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-secondary-500);"></div><div class="swatch-meta"><span class="swatch-token">Secondary 500</span><span class="swatch-hex">#627d98</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-secondary-600);"></div><div class="swatch-meta"><span class="swatch-token">Secondary 600</span><span class="swatch-hex">#486581</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-secondary-700);"></div><div class="swatch-meta"><span class="swatch-token">Secondary 700</span><span class="swatch-hex">#334e68</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-secondary-800);"></div><div class="swatch-meta"><span class="swatch-token">Secondary 800</span><span class="swatch-hex">#243b53</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-secondary-900);"></div><div class="swatch-meta"><span class="swatch-token">Secondary 900</span><span class="swatch-hex">#102a43</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-secondary-950);"></div><div class="swatch-meta"><span class="swatch-token">Secondary 950</span><span class="swatch-hex">#0b1a2a</span></div></div>
+        </div>
+
+        <!-- Accent Palette -->
+        <h3 style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-3); color: var(--color-accent-800);">
+          Accent Palette (Transit Amber / Warning Gold)
+        </h3>
+        <div class="palette-grid">
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-accent-50);"></div><div class="swatch-meta"><span class="swatch-token">Accent 50</span><span class="swatch-hex">#fffbeb</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-accent-100);"></div><div class="swatch-meta"><span class="swatch-token">Accent 100</span><span class="swatch-hex">#fef3c7</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-accent-200);"></div><div class="swatch-meta"><span class="swatch-token">Accent 200</span><span class="swatch-hex">#fde68a</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-accent-300);"></div><div class="swatch-meta"><span class="swatch-token">Accent 300</span><span class="swatch-hex">#fcd34d</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-accent-400);"></div><div class="swatch-meta"><span class="swatch-token">Accent 400</span><span class="swatch-hex">#fbbf24</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-accent-500);"></div><div class="swatch-meta"><span class="swatch-token">Accent 500</span><span class="swatch-hex">#f59e0b</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-accent-600);"></div><div class="swatch-meta"><span class="swatch-token">Accent 600</span><span class="swatch-hex">#d97706</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-accent-700);"></div><div class="swatch-meta"><span class="swatch-token">Accent 700</span><span class="swatch-hex">#b45309</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-accent-800);"></div><div class="swatch-meta"><span class="swatch-token">Accent 800</span><span class="swatch-hex">#92400e</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-accent-900);"></div><div class="swatch-meta"><span class="swatch-token">Accent 900</span><span class="swatch-hex">#78350f</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-accent-950);"></div><div class="swatch-meta"><span class="swatch-token">Accent 950</span><span class="swatch-hex">#451a03</span></div></div>
+        </div>
+
+        <!-- Neutral Palette -->
+        <h3 style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-3); color: var(--color-neutral-800);">
+          Neutral Palette (Modern Institutional Slate)
+        </h3>
+        <div class="palette-grid">
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-neutral-50);"></div><div class="swatch-meta"><span class="swatch-token">Neutral 50</span><span class="swatch-hex">#f8fafc</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-neutral-100);"></div><div class="swatch-meta"><span class="swatch-token">Neutral 100</span><span class="swatch-hex">#f1f5f9</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-neutral-200);"></div><div class="swatch-meta"><span class="swatch-token">Neutral 200</span><span class="swatch-hex">#e2e8f0</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-neutral-300);"></div><div class="swatch-meta"><span class="swatch-token">Neutral 300</span><span class="swatch-hex">#cbd5e1</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-neutral-400);"></div><div class="swatch-meta"><span class="swatch-token">Neutral 400</span><span class="swatch-hex">#94a3b8</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-neutral-500);"></div><div class="swatch-meta"><span class="swatch-token">Neutral 500</span><span class="swatch-hex">#64748b</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-neutral-600);"></div><div class="swatch-meta"><span class="swatch-token">Neutral 600</span><span class="swatch-hex">#475569</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-neutral-700);"></div><div class="swatch-meta"><span class="swatch-token">Neutral 700</span><span class="swatch-hex">#334155</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-neutral-800);"></div><div class="swatch-meta"><span class="swatch-token">Neutral 800</span><span class="swatch-hex">#1e293b</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-neutral-900);"></div><div class="swatch-meta"><span class="swatch-token">Neutral 900</span><span class="swatch-hex">#0f172a</span></div></div>
+          <div class="swatch-card"><div class="swatch-color" style="background-color: var(--color-neutral-950);"></div><div class="swatch-meta"><span class="swatch-token">Neutral 950</span><span class="swatch-hex">#020617</span></div></div>
+        </div>
+
+        <!-- Semantic Palette -->
+        <h3 style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-3); color: var(--color-neutral-800);">
+          Semantic Colors (Status & Feedback)
+        </h3>
+        <div class="grid grid-cols-3">
+          <div class="swatch-card">
+            <div class="swatch-color" style="background-color: var(--color-success); height: 80px;"></div>
+            <div class="swatch-meta" style="padding: var(--spacing-3);">
+              <span class="swatch-token" style="font-size: var(--font-size-sm);">Success</span>
+              <span class="swatch-hex">#10b981</span>
+              <p style="font-size: var(--font-size-xs); color: var(--color-text-subtle); margin-top: var(--spacing-1);">Approved staff, active operations</p>
+            </div>
+          </div>
+
+          <div class="swatch-card">
+            <div class="swatch-color" style="background-color: var(--color-warning); height: 80px;"></div>
+            <div class="swatch-meta" style="padding: var(--spacing-3);">
+              <span class="swatch-token" style="font-size: var(--font-size-sm);">Warning</span>
+              <span class="swatch-hex">#f59e0b</span>
+              <p style="font-size: var(--font-size-xs); color: var(--color-text-subtle); margin-top: var(--spacing-1);">Pending approvals, standing capacity</p>
+            </div>
+          </div>
+
+          <div class="swatch-card">
+            <div class="swatch-color" style="background-color: var(--color-error); height: 80px;"></div>
+            <div class="swatch-meta" style="padding: var(--spacing-3);">
+              <span class="swatch-token" style="font-size: var(--font-size-sm);">Error</span>
+              <span class="swatch-hex">#ef4444</span>
+              <p style="font-size: var(--font-size-xs); color: var(--color-text-subtle); margin-top: var(--spacing-1);">Rejected accounts, route errors</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           2. TYPOGRAPHY
+           ==================================================================== -->
+      <section id="section-typography" class="showcase-section">
+        <div class="showcase-header">
+          <h2 class="showcase-title">2. Typography (Roboto)</h2>
+          <p class="showcase-subtitle">Font size scale from XS to 4XL with sample text</p>
+        </div>
+
+        <div class="card">
+          <div class="type-scale-row">
+            <div>
+              <span style="font-weight: var(--font-weight-bold);">4XL</span>
+              <span style="color: var(--color-neutral-500); font-size: var(--font-size-xs); display: block;">2.25rem (36px)</span>
+            </div>
+            <div style="font-size: var(--font-size-4xl); font-weight: var(--font-weight-bold);">
+              College Bus Fleet Operations
+            </div>
+          </div>
+
+          <div class="type-scale-row">
+            <div>
+              <span style="font-weight: var(--font-weight-bold);">3XL</span>
+              <span style="color: var(--color-neutral-500); font-size: var(--font-size-xs); display: block;">1.875rem (30px)</span>
+            </div>
+            <div style="font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold);">
+              Daily Student Transit & Route Assignment
+            </div>
+          </div>
+
+          <div class="type-scale-row">
+            <div>
+              <span style="font-weight: var(--font-weight-bold);">2XL</span>
+              <span style="color: var(--color-neutral-500); font-size: var(--font-size-xs); display: block;">1.5rem (24px)</span>
+            </div>
+            <div style="font-size: var(--font-size-2xl); font-weight: var(--font-weight-medium);">
+              Staff Incharge Attendance Management
+            </div>
+          </div>
+
+          <div class="type-scale-row">
+            <div>
+              <span style="font-weight: var(--font-weight-bold);">XL</span>
+              <span style="color: var(--color-neutral-500); font-size: var(--font-size-xs); display: block;">1.25rem (20px)</span>
+            </div>
+            <div style="font-size: var(--font-size-xl);">
+              Authorized Bus Roster & Morning Boarding Log
+            </div>
+          </div>
+
+          <div class="type-scale-row">
+            <div>
+              <span style="font-weight: var(--font-weight-bold);">LG</span>
+              <span style="color: var(--color-neutral-500); font-size: var(--font-size-xs); display: block;">1.125rem (18px)</span>
+            </div>
+            <div style="font-size: var(--font-size-lg);">
+              Route 14 — East Campus to North Terminal Hub
+            </div>
+          </div>
+
+          <div class="type-scale-row">
+            <div>
+              <span style="font-weight: var(--font-weight-bold);">Base</span>
+              <span style="color: var(--color-neutral-500); font-size: var(--font-size-xs); display: block;">1rem (16px)</span>
+            </div>
+            <div style="font-size: var(--font-size-base);">
+              Standard body text for institutional reporting, audit timestamps, and student attendance notes.
+            </div>
+          </div>
+
+          <div class="type-scale-row">
+            <div>
+              <span style="font-weight: var(--font-weight-bold);">SM</span>
+              <span style="color: var(--color-neutral-500); font-size: var(--font-size-xs); display: block;">0.875rem (14px)</span>
+            </div>
+            <div style="font-size: var(--font-size-sm);">
+              Secondary metadata, table column headers, form labels, and operational status indicators.
+            </div>
+          </div>
+
+          <div class="type-scale-row" style="border-bottom: none;">
+            <div>
+              <span style="font-weight: var(--font-weight-bold);">XS</span>
+              <span style="color: var(--color-neutral-500); font-size: var(--font-size-xs); display: block;">0.75rem (12px)</span>
+            </div>
+            <div style="font-size: var(--font-size-xs);">
+              Micro-badges, legal disclaimers, system version markers, and database UUID snippets.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           3. SPACING
+           ==================================================================== -->
+      <section id="section-spacing" class="showcase-section">
+        <div class="showcase-header">
+          <h2 class="showcase-title">3. Spacing Scale</h2>
+          <p class="showcase-subtitle">Proportional spacing tokens from 0 to 8</p>
+        </div>
+
+        <div class="card">
+          <div class="grid grid-cols-2" style="gap: var(--spacing-4);">
+            <div class="flex items-center gap-4">
+              <span style="width: 110px; font-weight: var(--font-weight-bold); font-size: var(--font-size-sm);">spacing-1 (4px)</span>
+              <div class="spacing-demo-box" style="width: var(--spacing-1);"></div>
+            </div>
+            <div class="flex items-center gap-4">
+              <span style="width: 110px; font-weight: var(--font-weight-bold); font-size: var(--font-size-sm);">spacing-2 (8px)</span>
+              <div class="spacing-demo-box" style="width: var(--spacing-2);"></div>
+            </div>
+            <div class="flex items-center gap-4">
+              <span style="width: 110px; font-weight: var(--font-weight-bold); font-size: var(--font-size-sm);">spacing-3 (12px)</span>
+              <div class="spacing-demo-box" style="width: var(--spacing-3);"></div>
+            </div>
+            <div class="flex items-center gap-4">
+              <span style="width: 110px; font-weight: var(--font-weight-bold); font-size: var(--font-size-sm);">spacing-4 (16px)</span>
+              <div class="spacing-demo-box" style="width: var(--spacing-4);"></div>
+            </div>
+            <div class="flex items-center gap-4">
+              <span style="width: 110px; font-weight: var(--font-weight-bold); font-size: var(--font-size-sm);">spacing-5 (20px)</span>
+              <div class="spacing-demo-box" style="width: var(--spacing-5);"></div>
+            </div>
+            <div class="flex items-center gap-4">
+              <span style="width: 110px; font-weight: var(--font-weight-bold); font-size: var(--font-size-sm);">spacing-6 (24px)</span>
+              <div class="spacing-demo-box" style="width: var(--spacing-6);"></div>
+            </div>
+            <div class="flex items-center gap-4">
+              <span style="width: 110px; font-weight: var(--font-weight-bold); font-size: var(--font-size-sm);">spacing-8 (32px)</span>
+              <div class="spacing-demo-box" style="width: var(--spacing-8);"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           4. RADIUS
+           ==================================================================== -->
+      <section id="section-radius" class="showcase-section">
+        <div class="showcase-header">
+          <h2 class="showcase-title">4. Border Radius</h2>
+          <p class="showcase-subtitle">Geometric curvature tokens applied to UI shapes</p>
+        </div>
+
+        <div class="card">
+          <div class="flex items-center gap-6 flex-wrap justify-between">
+            <div class="flex flex-col items-center gap-2">
+              <div class="radius-demo-box" style="border-radius: var(--radius-none);">None</div>
+              <span style="font-size: var(--font-size-xs); font-weight: var(--font-weight-bold);">radius-none (0px)</span>
+            </div>
+
+            <div class="flex flex-col items-center gap-2">
+              <div class="radius-demo-box" style="border-radius: var(--radius-sm);">SM</div>
+              <span style="font-size: var(--font-size-xs); font-weight: var(--font-weight-bold);">radius-sm (4px)</span>
+            </div>
+
+            <div class="flex flex-col items-center gap-2">
+              <div class="radius-demo-box" style="border-radius: var(--radius-md);">MD</div>
+              <span style="font-size: var(--font-size-xs); font-weight: var(--font-weight-bold);">radius-md (6px)</span>
+            </div>
+
+            <div class="flex flex-col items-center gap-2">
+              <div class="radius-demo-box" style="border-radius: var(--radius-lg);">LG</div>
+              <span style="font-size: var(--font-size-xs); font-weight: var(--font-weight-bold);">radius-lg (8px)</span>
+            </div>
+
+            <div class="flex flex-col items-center gap-2">
+              <div class="radius-demo-box" style="border-radius: var(--radius-xl);">XL</div>
+              <span style="font-size: var(--font-size-xs); font-weight: var(--font-weight-bold);">radius-xl (12px)</span>
+            </div>
+
+            <div class="flex flex-col items-center gap-2">
+              <div class="radius-demo-box" style="border-radius: var(--radius-2xl);">2XL</div>
+              <span style="font-size: var(--font-size-xs); font-weight: var(--font-weight-bold);">radius-2xl (16px)</span>
+            </div>
+
+            <div class="flex flex-col items-center gap-2">
+              <div class="radius-demo-box" style="border-radius: var(--radius-full);">Full</div>
+              <span style="font-size: var(--font-size-xs); font-weight: var(--font-weight-bold);">radius-full (Pill)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           5. SHADOWS
+           ==================================================================== -->
+      <section id="section-shadows" class="showcase-section">
+        <div class="showcase-header">
+          <h2 class="showcase-title">5. Box Shadows & Elevation</h2>
+          <p class="showcase-subtitle">Subtle elevation depths for cards, overlays, and modals</p>
+        </div>
+
+        <div class="grid grid-cols-4">
+          <div class="shadow-demo-box" style="box-shadow: var(--shadow-sm); border: 1px solid var(--color-neutral-200);">
+            <div style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-1);">Shadow SM</div>
+            <p style="font-size: var(--font-size-xs); color: var(--color-text-subtle);">Subtle card borders</p>
+          </div>
+
+          <div class="shadow-demo-box" style="box-shadow: var(--shadow-md); border: 1px solid var(--color-neutral-200);">
+            <div style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-1);">Shadow MD</div>
+            <p style="font-size: var(--font-size-xs); color: var(--color-text-subtle);">Active panels & auth cards</p>
+          </div>
+
+          <div class="shadow-demo-box" style="box-shadow: var(--shadow-lg); border: 1px solid var(--color-neutral-200);">
+            <div style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-1);">Shadow LG</div>
+            <p style="font-size: var(--font-size-xs); color: var(--color-text-subtle);">Hero callouts & flyouts</p>
+          </div>
+
+          <div class="shadow-demo-box" style="box-shadow: var(--shadow-xl); border: 1px solid var(--color-neutral-200);">
+            <div style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-1);">Shadow XL</div>
+            <p style="font-size: var(--font-size-xs); color: var(--color-text-subtle);">Modal dialogue elevation</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           6. COMPONENTS
+           ==================================================================== -->
+      <section id="section-components" class="showcase-section">
+        <div class="showcase-header">
+          <h2 class="showcase-title">6. Component Library</h2>
+          <p class="showcase-subtitle">Modular institutional components built with design system tokens</p>
+        </div>
+
+        <!-- Buttons -->
+        <div class="card" style="margin-bottom: var(--spacing-6);">
+          <h3 class="card-title" style="margin-bottom: var(--spacing-4);">Buttons & Actions</h3>
+          <div class="flex items-center gap-3 flex-wrap" style="margin-bottom: var(--spacing-4);">
+            <button class="btn btn-primary">Primary Button</button>
+            <button class="btn btn-secondary">Secondary Button</button>
+            <button class="btn btn-outline">Outline Button</button>
+            <button class="btn btn-danger">Danger Button</button>
+            <button class="btn btn-primary" disabled>Disabled Button</button>
+            <button class="btn btn-primary btn-sm">Small Button</button>
+            <button class="btn btn-primary btn-lg">Large Action</button>
+          </div>
+        </div>
+
+        <!-- Form Elements -->
+        <div class="card" style="margin-bottom: var(--spacing-6);">
+          <h3 class="card-title" style="margin-bottom: var(--spacing-4);">Form Elements & Controls</h3>
+          <div class="grid grid-cols-2">
+            <div class="form-group">
+              <label class="form-label">Text Input Field <span class="required-mark">*</span></label>
+              <input type="text" class="form-control" placeholder="Enter bus route number or staff name">
+              <div class="form-hint">Standard single-line text input</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Password Input with Visibility Toggle</label>
+              <div class="input-password-wrapper">
+                <input type="password" id="demo-pw" class="form-control" value="SecurePassword123">
+                <button type="button" id="demo-pw-toggle" class="password-toggle-btn" aria-label="Toggle password">
+                  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Select Dropdown</label>
+              <select class="form-control form-select">
+                <option>Select Assigned Bus Route</option>
+                <option>Bus 01 — Downtown Express</option>
+                <option>Bus 02 — South Suburb Line</option>
+                <option>Bus 03 — West Campus Shuttle</option>
+              </select>
+            </div>
+
+            <div class="form-group flex flex-col justify-center">
+              <label class="form-label">Checkboxes & Status Flags</label>
+              <label class="form-checkbox-label">
+                <input type="checkbox" class="form-checkbox" checked>
+                <span>Notify bus incharge upon schedule adjustment</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Badges & Status Indicators -->
+        <div class="card" style="margin-bottom: var(--spacing-6);">
+          <h3 class="card-title" style="margin-bottom: var(--spacing-4);">Status Badges</h3>
+          <div class="flex items-center gap-3 flex-wrap">
+            <span class="badge">Default Neutral</span>
+            <span class="badge badge-primary">Primary Role</span>
+            <span class="badge badge-success">Approved / Active</span>
+            <span class="badge badge-warning">Pending Approval</span>
+            <span class="badge badge-error">Rejected / Inactive</span>
+          </div>
+        </div>
+
+        <!-- Alerts -->
+        <div class="card" style="margin-bottom: var(--spacing-6);">
+          <h3 class="card-title" style="margin-bottom: var(--spacing-4);">Feedback Alerts</h3>
+          <div class="alert alert-primary">
+            <div><strong>Information:</strong> Daily bus claim window opens at 06:00 AM for all approved staff.</div>
+          </div>
+          <div class="alert alert-success">
+            <div><strong>Success:</strong> Staff profile verified and authorization confirmed.</div>
+          </div>
+          <div class="alert alert-warning">
+            <div><strong>Warning:</strong> Your staff account is waiting for Admin approval.</div>
+          </div>
+          <div class="alert alert-error">
+            <div><strong>Error:</strong> Your staff account has not been approved.</div>
+          </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="card" style="margin-bottom: var(--spacing-6);">
+          <h3 class="card-title" style="margin-bottom: var(--spacing-4);">Institutional Data Table</h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Staff Member</th>
+                  <th>Institutional Email</th>
+                  <th>Assigned Role</th>
+                  <th>Approval Status</th>
+                  <th>Account State</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Admin User</strong></td>
+                  <td>admin@college.edu</td>
+                  <td><span class="badge badge-primary">Admin</span></td>
+                  <td><span class="badge badge-success">Approved</span></td>
+                  <td><span class="badge badge-success">Active</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Prof. John Doe</strong></td>
+                  <td>j.doe@college.edu</td>
+                  <td><span class="badge">Staff</span></td>
+                  <td><span class="badge badge-warning">Pending</span></td>
+                  <td><span class="badge badge-success">Active</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Prof. Sarah Smith</strong></td>
+                  <td>s.smith@college.edu</td>
+                  <td><span class="badge">Staff</span></td>
+                  <td><span class="badge badge-success">Approved</span></td>
+                  <td><span class="badge badge-success">Active</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Staff Applicant</strong></td>
+                  <td>applicant@college.edu</td>
+                  <td><span class="badge">Staff</span></td>
+                  <td><span class="badge badge-error">Rejected</span></td>
+                  <td><span class="badge badge-error">Inactive</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- States: Loading, Empty, Error -->
+        <div class="grid grid-cols-3" style="margin-bottom: var(--spacing-6);">
+          <!-- Loading State -->
+          <div class="card flex flex-col items-center justify-center" style="text-align: center; min-height: 200px;">
+            <div class="spinner spinner-primary" style="width: 32px; height: 32px; margin-bottom: var(--spacing-3);"></div>
+            <h4 style="font-size: var(--font-size-base); margin-bottom: var(--spacing-1);">Loading Records</h4>
+            <p style="font-size: var(--font-size-xs);">Synchronizing with Supabase database...</p>
+          </div>
+
+          <!-- Empty State -->
+          <div class="card empty-state" style="padding: var(--spacing-6);">
+            <div class="empty-state-icon">🚌</div>
+            <h4 class="empty-state-title">No Active Assignments</h4>
+            <p class="empty-state-text">No bus operations have been claimed for the selected date.</p>
+            <button class="btn btn-outline btn-sm">Refresh List</button>
+          </div>
+
+          <!-- Error State -->
+          <div class="card error-state" style="padding: var(--spacing-6);">
+            <div style="font-size: var(--font-size-3xl); margin-bottom: var(--spacing-2);">⚠️</div>
+            <h4 class="error-state-title">Connection Interrupted</h4>
+            <p style="font-size: var(--font-size-xs); color: var(--color-error-dark); margin-bottom: var(--spacing-3);">
+              Unable to reach authentication server.
+            </p>
+            <button class="btn btn-danger btn-sm">Retry Request</button>
+          </div>
+        </div>
+
+        <!-- Modal Trigger & Demo -->
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom: var(--spacing-2);">Interactive Modal Dialog</h3>
+          <p style="font-size: var(--font-size-sm); margin-bottom: var(--spacing-4);">
+            Demonstrates modal backdrop blur, elevation shadow XL, and accessible close action.
+          </p>
+          <button id="open-modal-btn" class="btn btn-primary">Open Sample Modal</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Sample Interactive Modal -->
+  <div id="demo-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-sample-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modal-sample-title" class="modal-title">Transit Policy Confirmation</h3>
+        <button id="close-modal-btn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: var(--font-size-sm); line-height: var(--line-height-normal);">
+          Daily bus claiming locks the selected bus to the logged-in Staff incharge for the current calendar date. Confirm this operation before assigning attendance records.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button id="cancel-modal-btn" class="btn btn-outline">Cancel</button>
+        <button id="confirm-modal-btn" class="btn btn-primary">Confirm Action</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div><span>College Bus Management Platform</span> • <span>Design System Showcase</span></div>
+    </div>
+  </footer>
+
+  <script src="js/ui.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Setup demo password toggle
+      window.Ui.initPasswordToggle('demo-pw-toggle', 'demo-pw');
+
+      // Modal open / close logic
+      const modal = document.getElementById('demo-modal');
+      const openBtn = document.getElementById('open-modal-btn');
+      const closeBtn = document.getElementById('close-modal-btn');
+      const cancelBtn = document.getElementById('cancel-modal-btn');
+      const confirmBtn = document.getElementById('confirm-modal-btn');
+
+      function openModal() {
+        modal.classList.add('active');
+      }
+
+      function closeModal() {
+        modal.classList.remove('active');
+      }
+
+      openBtn.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+      confirmBtn.addEventListener('click', () => {
+        alert('Modal Action Confirmed!');
+        closeModal();
+      });
+
+      // Close on backdrop click
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+    });
+  </script>
+</body>
+</html>

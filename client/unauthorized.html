@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Denied - College Bus Management Platform</title>
+  <meta name="description" content="Unauthorized access restricted. Role-based security enforcement.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <!-- Header Navigation -->
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" aria-label="Main Navigation">
+        <a href="index.html" class="nav-brand">
+          <span class="brand-badge" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-1.1 0-2 .9-2 2v7h2"/>
+              <circle cx="7" cy="17" r="2"/>
+              <path d="M9 17h6"/>
+              <circle cx="17" cy="17" r="2"/>
+            </svg>
+          </span>
+          <span>College Bus Transit</span>
+        </a>
+
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="login.html" class="btn btn-primary btn-sm">Sign In</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Unauthorized Main Container -->
+  <main class="main-content">
+    <div class="auth-wrapper">
+      <div class="auth-card" style="text-align: center; max-width: 520px;">
+        <div style="font-size: 3rem; margin-bottom: var(--spacing-3);">🛡️</div>
+        <h1 class="auth-title" style="margin-bottom: var(--spacing-2);">Access Restricted</h1>
+        
+        <div id="reason-message" class="alert alert-warning" style="text-align: left; margin: var(--spacing-5) 0;">
+          Checking access authorization status...
+        </div>
+
+        <p style="font-size: var(--font-size-sm); color: var(--color-text-muted); margin-bottom: var(--spacing-6);">
+          The College Bus Management Platform enforces strict role and approval verification. If you believe this is an error, please contact the institution transportation administrator.
+        </p>
+
+        <div class="flex items-center justify-center gap-3">
+          <a href="login.html" class="btn btn-primary">Return to Sign In</a>
+          <a href="index.html" class="btn btn-outline">Back to Home</a>
+          <button id="logout-btn" class="btn btn-secondary" style="display: none;">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div><span>College Bus Management Platform</span> • <span>Security & Authorization</span></div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const reason = urlParams.get('reason');
+      const messageEl = document.getElementById('reason-message');
+      const logoutBtn = document.getElementById('logout-btn');
+
+      if (reason === 'pending') {
+        messageEl.className = 'alert alert-warning';
+        messageEl.innerHTML = '<strong>Account Pending:</strong> Your staff account is waiting for Admin approval.';
+      } else if (reason === 'rejected') {
+        messageEl.className = 'alert alert-error';
+        messageEl.innerHTML = '<strong>Account Unapproved:</strong> Your staff account has not been approved.';
+      } else if (reason === 'admin_required') {
+        messageEl.className = 'alert alert-error';
+        messageEl.innerHTML = '<strong>Unauthorized:</strong> Access restricted to College Bus Administrators only.';
+      } else if (reason === 'staff_required') {
+        messageEl.className = 'alert alert-error';
+        messageEl.innerHTML = '<strong>Unauthorized:</strong> This operational area is reserved for approved Staff incharge.';
+      } else if (reason === 'account_inactive') {
+        messageEl.className = 'alert alert-error';
+        messageEl.innerHTML = '<strong>Deactivated:</strong> Your account has been deactivated.';
+      } else {
+        messageEl.className = 'alert alert-warning';
+        messageEl.innerHTML = '<strong>Access Denied:</strong> You do not have the required authorization to view this resource.';
+      }
+
+      // If user has a session, show logout option
+      const session = await window.Auth.getSession();
+      if (session) {
+        logoutBtn.style.display = 'inline-flex';
+        logoutBtn.addEventListener('click', async () => {
+          await window.Auth.logout();
+        });
+      }
+    });
+  </script>
+</body>
+</html>

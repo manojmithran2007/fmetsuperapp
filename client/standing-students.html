@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Standing Students - College Bus Management Platform</title>
+  <meta name="description" content="College Bus Management Platform - Daily Non-Seated / Standing Student Transit Log">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <!-- Header Navigation -->
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" aria-label="Staff Navigation">
+        <a href="staff-dashboard.html" class="nav-brand">
+          <span class="brand-badge" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-1.1 0-2 .9-2 2v7h2"/>
+              <circle cx="7" cy="17" r="2"/>
+              <path d="M9 17h6"/>
+              <circle cx="17" cy="17" r="2"/>
+            </svg>
+          </span>
+          <span>College Bus Transit <small style="font-size: 11px; opacity: 0.8;">• Staff Portal</small></span>
+        </a>
+
+        <div class="flex items-center gap-4">
+          <div class="user-badge-group">
+            <div class="avatar-circle" id="staff-avatar">S</div>
+            <div class="hide-mobile">
+              <div id="staff-name" style="font-weight: var(--font-weight-bold); font-size: var(--font-size-sm);">Staff Incharge</div>
+              <div id="staff-status" style="font-size: var(--font-size-xs); color: var(--color-success);">● Approved Staff</div>
+            </div>
+          </div>
+          <button id="staff-logout-btn" class="btn btn-outline btn-sm">Sign Out</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Staff Sub-Navigation -->
+      <nav class="staff-subnav" aria-label="Operational Navigation">
+        <a href="staff-dashboard.html" class="staff-subnav-link">
+          <span>🏠</span> Overview
+        </a>
+        <a href="staff-bus.html" class="staff-subnav-link" id="nav-active-bus">
+          <span>🚌</span> Active Bus Duty
+        </a>
+        <a href="bus-attendance.html" class="staff-subnav-link" id="nav-attendance">
+          <span>📋</span> Take Attendance
+        </a>
+        <a href="standing-students.html" class="staff-subnav-link active" id="nav-standing">
+          <span>🚶</span> Standing Students
+        </a>
+        <a href="today-report.html" class="staff-subnav-link" id="nav-report">
+          <span>📊</span> Today's Report
+        </a>
+        <a href="attendance-history.html" class="staff-subnav-link">
+          <span>🕒</span> Duty History
+        </a>
+      </nav>
+
+      <!-- Page Header Row -->
+      <div class="card" style="margin-bottom: var(--spacing-6); border-left: 4px solid var(--color-warning);">
+        <div class="dashboard-title-row">
+          <div>
+            <div class="flex items-center gap-2" style="margin-bottom: var(--spacing-2);">
+              <span class="badge badge-warning">Daily Operational Log</span>
+              <span class="badge badge-neutral" id="standing-date-badge">Today</span>
+              <span class="badge badge-primary" id="standing-bus-badge">Bus -</span>
+            </div>
+            <h1 style="font-size: var(--font-size-2xl);">Standing / Non-Seated Passengers Log</h1>
+            <p style="color: var(--color-text-muted); font-size: var(--font-size-sm); margin-top: 2px;">
+              Record students travelling on this bus without a fixed seat for today's trip.
+            </p>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: var(--font-size-3xl); font-weight: var(--font-weight-black); color: var(--color-warning);" id="standing-total-count">0</div>
+            <div style="font-size: var(--font-size-xs); color: var(--color-text-muted); text-transform: uppercase;">Standing Today</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Capacity Architecture Callout (Section 17 Requirement) -->
+      <div class="card" style="margin-bottom: var(--spacing-6); background-color: var(--color-neutral-50); border: 1px solid var(--color-neutral-200); padding: var(--spacing-4);">
+        <div class="flex items-start gap-3">
+          <span style="font-size: 1.5rem;">ℹ️</span>
+          <div>
+            <strong style="font-size: var(--font-size-sm); color: var(--color-primary-800);">Institutional Capacity Rule</strong>
+            <p style="font-size: var(--font-size-xs); color: var(--color-text-muted); margin-top: 2px;">
+              Bus seating capacity represents fixed physical seats only. Standing passengers are recorded exclusively for today's operational transit log and <strong>never modify permanent seat allocations</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Standing Student Form Card -->
+      <div class="card" style="margin-bottom: var(--spacing-8);">
+        <h2 style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-4);">Add Standing Student for Today</h2>
+        
+        <form id="standing-form" class="grid grid-cols-3 gap-4" style="align-items: flex-end;">
+          <div class="form-group">
+            <label class="form-label" for="standing-roll">Student Roll Number *</label>
+            <input type="text" id="standing-roll" class="form-input" placeholder="e.g. 21CS045" required />
+            <p class="form-hint">Type roll number of any registered student.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="standing-reason">Fixed Reason *</label>
+            <select id="standing-reason" class="form-select" required>
+              <option value="temporary">Temporary</option>
+              <option value="missed_regular_bus">Missed regular bus</option>
+              <option value="route_change">Route change</option>
+              <option value="no_capacity">No capacity</option>
+            </select>
+            <p class="form-hint">Fixed collegiate operational categories.</p>
+          </div>
+
+          <div>
+            <button type="submit" id="add-standing-btn" class="btn btn-primary btn-block">
+              + Add Standing Student
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Standing Students Table -->
+      <div class="card">
+        <div class="flex items-center justify-between" style="margin-bottom: var(--spacing-4); padding-bottom: var(--spacing-3); border-bottom: 1px solid var(--color-neutral-200);">
+          <h2 style="font-size: var(--font-size-lg);">Today's Standing Roster</h2>
+          <span class="badge badge-neutral" id="roster-badge">0 recorded</span>
+        </div>
+
+        <div id="standing-loading" class="text-center" style="padding: var(--spacing-8);">
+          <div class="spinner"></div>
+          <p style="color: var(--color-text-muted); font-size: var(--font-size-sm); margin-top: var(--spacing-2);">Loading standing students log...</p>
+        </div>
+
+        <div id="standing-empty" class="text-center" style="display: none; padding: var(--spacing-8);">
+          <span style="font-size: 2.5rem;">🚶</span>
+          <p style="color: var(--color-text-muted); font-size: var(--font-size-sm); margin-top: var(--spacing-2);">No standing students recorded on this bus today.</p>
+        </div>
+
+        <div id="standing-table-wrap" class="table-container" style="display: none;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Roll Number</th>
+                <th>Regular Bus</th>
+                <th>Standing Reason</th>
+                <th>Recorded At</th>
+                <th style="width: 100px; text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="standing-tbody">
+              <!-- Dynamically populated via standing-students.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div><span>College Bus Management Platform</span> • <span>Phase 3 Standing Students</span></div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/guards.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/pages/standing-students.js"></script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Duty & Attendance History - College Bus Management Platform</title>
+  <meta name="description" content="College Bus Management Platform - Historical Transit and Attendance Records">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <!-- Header Navigation -->
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" aria-label="Staff Navigation">
+        <a href="staff-dashboard.html" class="nav-brand">
+          <span class="brand-badge" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-1.1 0-2 .9-2 2v7h2"/>
+              <circle cx="7" cy="17" r="2"/>
+              <path d="M9 17h6"/>
+              <circle cx="17" cy="17" r="2"/>
+            </svg>
+          </span>
+          <span>College Bus Transit <small style="font-size: 11px; opacity: 0.8;">• Staff Portal</small></span>
+        </a>
+
+        <div class="flex items-center gap-4">
+          <div class="user-badge-group">
+            <div class="avatar-circle" id="staff-avatar">S</div>
+            <div class="hide-mobile">
+              <div id="staff-name" style="font-weight: var(--font-weight-bold); font-size: var(--font-size-sm);">Staff Incharge</div>
+              <div id="staff-status" style="font-size: var(--font-size-xs); color: var(--color-success);">● Approved Staff</div>
+            </div>
+          </div>
+          <button id="staff-logout-btn" class="btn btn-outline btn-sm">Sign Out</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Staff Sub-Navigation -->
+      <nav class="staff-subnav" aria-label="Operational Navigation">
+        <a href="staff-dashboard.html" class="staff-subnav-link">
+          <span>🏠</span> Overview
+        </a>
+        <a href="staff-bus.html" class="staff-subnav-link" id="nav-active-bus">
+          <span>🚌</span> Active Bus Duty
+        </a>
+        <a href="bus-attendance.html" class="staff-subnav-link" id="nav-attendance">
+          <span>📋</span> Take Attendance
+        </a>
+        <a href="standing-students.html" class="staff-subnav-link" id="nav-standing">
+          <span>🚶</span> Standing Students
+        </a>
+        <a href="today-report.html" class="staff-subnav-link" id="nav-report">
+          <span>📊</span> Today's Report
+        </a>
+        <a href="attendance-history.html" class="staff-subnav-link active">
+          <span>🕒</span> Duty History
+        </a>
+      </nav>
+
+      <!-- Page Header Row -->
+      <div class="card" style="margin-bottom: var(--spacing-6); border-left: 4px solid var(--color-primary-600);">
+        <div class="dashboard-title-row">
+          <div>
+            <div class="flex items-center gap-2" style="margin-bottom: var(--spacing-2);">
+              <span class="badge badge-primary">Historical Records</span>
+              <span class="badge badge-neutral">Archived Sessions</span>
+            </div>
+            <h1 style="font-size: var(--font-size-2xl);">Bus Duty & Attendance History</h1>
+            <p style="color: var(--color-text-muted); font-size: var(--font-size-sm); margin-top: 2px;">
+              Review past bus routes, attendance logs, and standing student registers you have handled.
+            </p>
+          </div>
+          <div>
+            <button id="refresh-history-btn" class="btn btn-outline btn-sm">
+              🔄 Refresh History
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- History Table Card -->
+      <div class="card">
+        <div id="history-loading" class="text-center" style="padding: var(--spacing-12);">
+          <div class="spinner"></div>
+          <p style="color: var(--color-text-muted); font-size: var(--font-size-sm); margin-top: var(--spacing-3);">Loading transit history...</p>
+        </div>
+
+        <div id="history-empty" class="text-center" style="display: none; padding: var(--spacing-12);">
+          <span style="font-size: 3rem;">🕒</span>
+          <h2 style="font-size: var(--font-size-xl); margin-top: var(--spacing-3);">No Duty History Found</h2>
+          <p style="color: var(--color-text-muted); font-size: var(--font-size-sm); margin-top: var(--spacing-2);">
+            You have not completed any bus duties yet. Claim a bus from the dashboard to start.
+          </p>
+        </div>
+
+        <div id="history-table-wrap" class="table-container" style="display: none;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Bus & Route</th>
+                <th>Duty Status</th>
+                <th style="text-align: center;">Present</th>
+                <th style="text-align: center;">Absent</th>
+                <th style="text-align: center;">Standing</th>
+                <th style="text-align: center;">Total Travelling</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="history-tbody">
+              <!-- Dynamically populated via attendance-history.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Detailed Historical Duty Modal -->
+  <div id="history-detail-modal" class="modal-overlay">
+    <div class="modal-dialog modal-dialog-lg">
+      <div class="modal-header">
+        <h3 id="modal-detail-title" style="font-size: var(--font-size-lg);">Duty Record Details</h3>
+        <button class="modal-close" id="modal-detail-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: var(--spacing-6);">
+        <div id="modal-detail-loading" class="text-center" style="padding: var(--spacing-8);">
+          <div class="spinner"></div>
+          <p style="font-size: var(--font-size-sm); color: var(--color-text-muted); margin-top: var(--spacing-2);">Loading historical roster...</p>
+        </div>
+
+        <div id="modal-detail-content" style="display: none;">
+          <!-- Meta stats strip -->
+          <div class="grid grid-cols-4 gap-3 text-center" style="background-color: var(--color-neutral-50); padding: var(--spacing-4); border-radius: var(--radius-lg); margin-bottom: var(--spacing-6);">
+            <div>
+              <div style="font-size: var(--font-size-xl); font-weight: var(--font-weight-black); color: var(--color-success);" id="m-stat-present">0</div>
+              <div style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Present</div>
+            </div>
+            <div>
+              <div style="font-size: var(--font-size-xl); font-weight: var(--font-weight-black); color: var(--color-danger);" id="m-stat-absent">0</div>
+              <div style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Absent</div>
+            </div>
+            <div>
+              <div style="font-size: var(--font-size-xl); font-weight: var(--font-weight-black); color: var(--color-warning);" id="m-stat-standing">0</div>
+              <div style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Standing</div>
+            </div>
+            <div>
+              <div style="font-size: var(--font-size-xl); font-weight: var(--font-weight-black); color: var(--color-primary-700);" id="m-stat-total">0</div>
+              <div style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Total Riders</div>
+            </div>
+          </div>
+
+          <!-- Attendance table -->
+          <h4 style="font-size: var(--font-size-sm); text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--spacing-2);">
+            Seated Passengers Attendance
+          </h4>
+          <div class="table-container" style="max-height: 240px; overflow-y: auto; margin-bottom: var(--spacing-6);">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 70px;">Seat</th>
+                  <th>Student Name</th>
+                  <th>Roll Number</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="m-attendance-tbody"></tbody>
+            </table>
+          </div>
+
+          <!-- Standing table -->
+          <h4 style="font-size: var(--font-size-sm); text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--spacing-2);">
+            Standing Passengers Log
+          </h4>
+          <div class="table-container" style="max-height: 180px; overflow-y: auto;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Roll Number</th>
+                  <th>Reason</th>
+                </tr>
+              </thead>
+              <tbody id="m-standing-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div><span>College Bus Management Platform</span> • <span>Duty History</span></div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/guards.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/pages/attendance-history.js"></script>
+</body>
+</html>

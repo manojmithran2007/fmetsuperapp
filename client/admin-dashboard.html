@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - College Bus Management Platform</title>
+  <meta name="description" content="College Bus Management Platform - Admin Command Center for Bus, Student & Staff Management">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+
+  <style>
+    /* ── Tab Navigation ─────────────────────────────────────────────────── */
+    .tab-nav {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--color-neutral-200);
+      margin-bottom: var(--spacing-6);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tab-nav::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      flex-shrink: 0;
+      padding: var(--spacing-3) var(--spacing-5);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      font-family: inherit;
+      border: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      background: transparent;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
+      white-space: nowrap;
+    }
+    .tab-btn:hover {
+      color: var(--color-primary-600);
+      background-color: var(--color-neutral-50);
+    }
+    .tab-btn.active {
+      color: var(--color-primary-600);
+      border-bottom-color: var(--color-primary-600);
+      font-weight: var(--font-weight-bold);
+    }
+    /* ── Stat Cards ─────────────────────────────────────────────────────── */
+    .stat-card {
+      text-align: center;
+      padding: var(--spacing-5);
+    }
+    .stat-icon { font-size: 1.6rem; margin-bottom: var(--spacing-2); }
+    .stat-value {
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-black);
+      line-height: 1.1;
+    }
+    .stat-label {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+      margin-top: var(--spacing-1);
+    }
+    /* ── Modal Overlay ─────────────────────────────────────────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-4);
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-dialog {
+      background: #fff;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modal-in 200ms ease;
+    }
+    .modal-dialog-lg { max-width: 700px; }
+    @keyframes modal-in {
+      from { opacity: 0; transform: translateY(-16px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0)     scale(1); }
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-5) var(--spacing-6);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .modal-title { font-size: var(--font-size-lg); font-weight: var(--font-weight-bold); }
+    .modal-close-btn {
+      background: none; border: none; cursor: pointer;
+      color: var(--color-text-muted); padding: var(--spacing-1);
+      border-radius: var(--radius-md); line-height: 1;
+      font-size: 1.25rem; transition: background 150ms;
+    }
+    .modal-close-btn:hover { background: var(--color-neutral-100); color: var(--color-neutral-900); }
+    .modal-body   { padding: var(--spacing-6); }
+    .modal-footer {
+      display: flex; align-items: center; justify-content: flex-end;
+      gap: var(--spacing-3); padding: var(--spacing-4) var(--spacing-6);
+      border-top: 1px solid var(--color-border);
+    }
+    /* ── Progress Bar ──────────────────────────────────────────────────── */
+    .progress-bar-track {
+      flex: 1; height: 8px;
+      background: var(--color-neutral-100);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 0.4s ease;
+    }
+    /* ── Seat info hint ────────────────────────────────────────────────── */
+    .field-hint {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+      margin-top: var(--spacing-1);
+    }
+
+    /* ── Phase 4: Subtabs ──────────────────────────────────────────────── */
+    .subtab-nav {
+      display: flex;
+      gap: var(--spacing-2);
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: var(--spacing-4);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .subtab-nav::-webkit-scrollbar { display: none; }
+    .subtab-btn {
+      padding: var(--spacing-2) var(--spacing-4);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-medium);
+      font-family: inherit;
+      border: 1px solid transparent;
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+      background: transparent;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      transition: all 150ms ease;
+    }
+    .subtab-btn:hover {
+      color: var(--color-primary-600);
+      background-color: var(--color-neutral-50);
+    }
+    .subtab-btn.active {
+      color: var(--color-primary-700);
+      background-color: #fff;
+      border-color: var(--color-border) var(--color-border) #fff;
+      font-weight: var(--font-weight-bold);
+      box-shadow: 0 -2px 0 var(--color-primary-600);
+    }
+
+    /* ── Phase 4: Filter Bars & Metric Cards ───────────────────────────── */
+    .filter-card {
+      background: var(--color-neutral-50);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-4);
+      margin-bottom: var(--spacing-5);
+    }
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--spacing-3);
+      align-items: flex-end;
+    }
+    .metric-ribbon {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: var(--spacing-3);
+      margin-bottom: var(--spacing-5);
+    }
+    .metric-box {
+      background: #fff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-3) var(--spacing-4);
+      text-align: center;
+    }
+    .metric-box-val {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-black);
+      line-height: 1.2;
+    }
+    .metric-box-lbl {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── Phase 4: Badges & Live Indicator ──────────────────────────────── */
+    .badge-in-duty {
+      background-color: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+    .badge-completed {
+      background-color: #f0fdf4;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+    .badge-unassigned {
+      background-color: #f8fafc;
+      color: #64748b;
+      border: 1px solid #e2e8f0;
+    }
+    .live-pulse {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #22c55e;
+      margin-right: 6px;
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+      animation: pulse-green 2s infinite;
+    }
+    @keyframes pulse-green {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+
+    /* ── Phase 4: Charts ───────────────────────────────────────────────── */
+    .chart-card {
+      background: #fff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-5);
+      margin-bottom: var(--spacing-4);
+    }
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-4);
+      padding-bottom: var(--spacing-2);
+      border-bottom: 1px solid var(--color-neutral-100);
+    }
+    .chart-title {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-neutral-900);
+    }
+    .svg-chart-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+    .svg-chart {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- ====================================================================
+       HEADER NAVIGATION (preserved from Phase 1)
+       ==================================================================== -->
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" aria-label="Admin Navigation">
+        <a href="index.html" class="nav-brand">
+          <span class="brand-badge" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-1.1 0-2 .9-2 2v7h2"/>
+              <circle cx="7" cy="17" r="2"/>
+              <path d="M9 17h6"/>
+              <circle cx="17" cy="17" r="2"/>
+            </svg>
+          </span>
+          <span>College Bus Transit</span>
+        </a>
+        <div class="flex items-center gap-4">
+          <span class="badge badge-primary">Administrator</span>
+          <button id="admin-logout-btn" class="btn btn-outline btn-sm">Sign Out</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ====================================================================
+       MAIN DASHBOARD CONTENT
+       ==================================================================== -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Dashboard Title Card -->
+      <div class="card" style="margin-bottom: var(--spacing-5); border-left: 4px solid var(--color-primary-600);">
+        <div class="dashboard-title-row">
+          <div>
+            <div class="flex items-center gap-2" style="margin-bottom: var(--spacing-2);">
+              <span class="badge badge-primary">Admin Dashboard</span>
+              <span class="badge badge-success">Phase 4 Production</span>
+            </div>
+            <h1 style="font-size: var(--font-size-3xl);">Administrator Command Center</h1>
+            <p style="color: var(--color-text-muted);">
+              Manage fleet, students, staff approvals, daily duty operations, reports, and analytics.
+            </p>
+          </div>
+          <div class="user-badge-group">
+            <div class="avatar-circle" id="admin-avatar">A</div>
+            <div>
+              <div id="admin-name" style="font-weight: var(--font-weight-bold); font-size: var(--font-size-base);">Administrator</div>
+              <div id="admin-email" style="font-size: var(--font-size-xs); color: var(--color-text-subtle);">admin@college.edu</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================================================================
+           TAB NAVIGATION
+           ================================================================ -->
+      <nav class="tab-nav" aria-label="Dashboard sections">
+        <button class="tab-btn active" data-tab="overview">📊 Overview</button>
+        <button class="tab-btn" data-tab="monitoring"><span class="live-pulse"></span>🚌 Today's Duty</button>
+        <button class="tab-btn" data-tab="staff">👤 Staff</button>
+        <button class="tab-btn" data-tab="buses">🚌 Buses</button>
+        <button class="tab-btn" data-tab="students">🎓 Students</button>
+        <button class="tab-btn" data-tab="reports">📄 Reports</button>
+        <button class="tab-btn" data-tab="analytics">📈 Analytics</button>
+        <button class="tab-btn" data-tab="audit">🛡️ Audit Trail</button>
+      </nav>
+
+      <!-- ================================================================
+           TAB: OVERVIEW
+           ================================================================ -->
+      <section id="tab-overview" class="tab-section">
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-4" style="gap: var(--spacing-4); margin-bottom: var(--spacing-6);">
+          <div class="card stat-card">
+            <div class="stat-icon">🚌</div>
+            <div class="stat-value" id="stat-buses" style="color: var(--color-secondary-700);">…</div>
+            <div class="stat-label">Total Buses</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon">🎓</div>
+            <div class="stat-value" id="stat-students" style="color: var(--color-primary-600);">…</div>
+            <div class="stat-label">Total Students</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon">💺</div>
+            <div class="stat-value" id="stat-assigned" style="color: var(--color-success-dark);">…</div>
+            <div class="stat-label">Assigned Seats</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon">🔓</div>
+            <div class="stat-value" id="stat-available" style="color: var(--color-accent-700);">…</div>
+            <div class="stat-label">Available Seats</div>
+          </div>
+        </div>
+        <div class="grid grid-cols-3" style="gap: var(--spacing-4); margin-bottom: var(--spacing-6);">
+          <div class="card stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-value" id="stat-staff" style="color: var(--color-secondary-700);">…</div>
+            <div class="stat-label">Total Staff</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-value" id="stat-pending" style="color: var(--color-warning-dark);">…</div>
+            <div class="stat-label">Pending Approvals</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon">🏁</div>
+            <div class="stat-value" id="stat-capacity" style="color: var(--color-neutral-700);">…</div>
+            <div class="stat-label">Total Seat Capacity</div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card" style="margin-bottom: var(--spacing-6);">
+          <h2 style="font-size: var(--font-size-base); font-weight: var(--font-weight-bold); margin-bottom: var(--spacing-4);">Quick Actions</h2>
+          <div class="flex items-center gap-3 flex-wrap">
+            <button id="quick-view-monitoring" class="btn btn-primary btn-sm"><span class="live-pulse"></span>🚌 Today's Duty</button>
+            <button id="quick-view-reports"    class="btn btn-outline btn-sm">📄 Reports &amp; Export</button>
+            <button id="quick-add-bus"         class="btn btn-outline btn-sm">🚌 Add Bus</button>
+            <button id="quick-add-student"     class="btn btn-outline btn-sm">🎓 Add Student</button>
+            <button id="quick-manage-staff"    class="btn btn-outline btn-sm">👤 Manage Staff</button>
+            <button id="quick-view-buses"      class="btn btn-outline btn-sm">🚌 View Buses</button>
+            <button id="quick-view-students"   class="btn btn-outline btn-sm">🎓 View Students</button>
+            <button id="quick-view-analytics"  class="btn btn-outline btn-sm">📈 Analytics</button>
+            <button id="quick-view-audit"      class="btn btn-outline btn-sm">🛡️ Audit Trail</button>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="grid grid-cols-3" style="gap: var(--spacing-4);">
+          <!-- Recent Buses -->
+          <div class="card">
+            <h3 style="font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); margin-bottom: var(--spacing-3);">Recently Added Buses</h3>
+            <div class="table-responsive">
+              <table class="table" style="font-size: var(--font-size-xs);">
+                <thead><tr><th>Bus #</th><th>Route</th><th>Added</th></tr></thead>
+                <tbody id="recent-buses-body">
+                  <tr><td colspan="3" style="text-align:center;color:var(--color-text-muted);padding:var(--spacing-4);">Loading…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Recent Staff -->
+          <div class="card">
+            <h3 style="font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); margin-bottom: var(--spacing-3);">Recent Staff Registrations</h3>
+            <div class="table-responsive">
+              <table class="table" style="font-size: var(--font-size-xs);">
+                <thead><tr><th>Name</th><th>Status</th><th>Date</th></tr></thead>
+                <tbody id="recent-staff-body">
+                  <tr><td colspan="3" style="text-align:center;color:var(--color-text-muted);padding:var(--spacing-4);">Loading…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Recent Students -->
+          <div class="card">
+            <h3 style="font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); margin-bottom: var(--spacing-3);">Recently Added Students</h3>
+            <div class="table-responsive">
+              <table class="table" style="font-size: var(--font-size-xs);">
+                <thead><tr><th>Name</th><th>Roll No.</th><th>Bus</th></tr></thead>
+                <tbody id="recent-students-body">
+                  <tr><td colspan="3" style="text-align:center;color:var(--color-text-muted);padding:var(--spacing-4);">Loading…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Audit Events -->
+        <div class="card" style="margin-top: var(--spacing-4);">
+          <div class="flex items-center justify-between" style="margin-bottom: var(--spacing-3);">
+            <h3 style="font-size: var(--font-size-sm); font-weight: var(--font-weight-bold);">🛡️ Recent System &amp; Security Audit Trail</h3>
+            <button id="quick-all-audit" class="btn btn-outline btn-sm">View All Logs</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table" style="font-size: var(--font-size-xs);">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Action</th>
+                  <th>Entity</th>
+                  <th>Performed By</th>
+                  <th>Event Summary</th>
+                </tr>
+              </thead>
+              <tbody id="recent-audit-body">
+                <tr><td colspan="5" style="text-align:center;color:var(--color-text-muted);padding:var(--spacing-4);">Loading audit events…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           TAB: MONITORING (Today's Duty — Live Fleet Cockpit)
+           ================================================================ -->
+      <section id="tab-monitoring" class="tab-section" style="display:none;">
+        <div class="card" style="margin-bottom: var(--spacing-5);">
+          <div class="flex items-center justify-between flex-wrap gap-3"
+               style="padding-bottom: var(--spacing-4); border-bottom: 1px solid var(--color-border); margin-bottom: var(--spacing-4);">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="live-pulse"></span>
+                <h2 class="card-title" style="font-size: var(--font-size-xl);">Today's Fleet Operations Cockpit</h2>
+              </div>
+              <p class="card-subtitle">Real-time daily bus monitoring, staff duty tracking, and attendance headcount for today (<span id="monitoring-date-display">...</span>).</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <button id="refresh-monitoring-btn" class="btn btn-outline btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
+                </svg>
+                Refresh Fleet
+              </button>
+            </div>
+          </div>
+
+          <!-- Monitoring Summary Ribbon -->
+          <div class="metric-ribbon" style="margin-bottom: var(--spacing-6);">
+            <div class="metric-box">
+              <div class="metric-box-val" id="mon-total-buses" style="color:var(--color-primary-600);">…</div>
+              <div class="metric-box-lbl">Total Buses</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-box-val" id="mon-assigned-buses" style="color:var(--color-secondary-700);">…</div>
+              <div class="metric-box-lbl">Claimed by Staff</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-box-val" id="mon-in-duty" style="color:#0284c7;">…</div>
+              <div class="metric-box-lbl">In-Transit Duty</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-box-val" id="mon-completed" style="color:var(--color-success-dark);">…</div>
+              <div class="metric-box-lbl">Completed Runs</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-box-val" id="mon-unassigned" style="color:var(--color-warning-dark);">…</div>
+              <div class="metric-box-lbl">Unassigned Buses</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-box-val" id="mon-total-present" style="color:var(--color-success-dark);">…</div>
+              <div class="metric-box-lbl">Marked Present</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-box-val" id="mon-total-standing" style="color:var(--color-warning-dark);">…</div>
+              <div class="metric-box-lbl">Standing Riders</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-box-val" id="mon-total-riders" style="color:var(--color-primary-700);">…</div>
+              <div class="metric-box-lbl">Total Headcount</div>
+            </div>
+          </div>
+
+          <!-- Fleet Table -->
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Bus Number</th>
+                  <th>Route</th>
+                  <th>Assigned Staff</th>
+                  <th>Duty Status</th>
+                  <th style="text-align:center;">Capacity</th>
+                  <th style="text-align:center;">Assigned Seated</th>
+                  <th style="text-align:center;">Present</th>
+                  <th style="text-align:center;">Standing</th>
+                  <th style="text-align:center;">Total In-Bus</th>
+                  <th>Claimed At</th>
+                  <th>Completed At</th>
+                </tr>
+              </thead>
+              <tbody id="monitoring-table-body">
+                <tr><td colspan="11" style="text-align:center;color:var(--color-text-muted);padding:var(--spacing-6);">Loading live fleet status…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           TAB: STAFF (Phase 1 structure preserved exactly)
+           ================================================================ -->
+      <section id="tab-staff" class="tab-section" style="display:none;">
+        <div class="card">
+          <div class="card-header flex items-center justify-between flex-wrap gap-3"
+               style="padding-bottom: var(--spacing-4); border-bottom: 1px solid var(--color-border); margin-bottom: var(--spacing-4);">
+            <div>
+              <h2 class="card-title" style="font-size: var(--font-size-xl);">Staff Account Approvals</h2>
+              <p class="card-subtitle">Review new staff registrations, approve access, or reject unauthorized accounts.</p>
+            </div>
+            <button id="refresh-staff-btn" class="btn btn-outline btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
+              </svg>
+              Refresh
+            </button>
+          </div>
+
+          <div id="staff-alert" style="display: none; margin-bottom: var(--spacing-4);"></div>
+
+          <div class="flex items-center gap-2 flex-wrap" style="margin-bottom: var(--spacing-4);">
+            <button class="btn btn-sm btn-primary staff-filter-btn" data-status="pending">
+              Pending (<span id="count-pending">0</span>)
+            </button>
+            <button class="btn btn-sm btn-outline staff-filter-btn" data-status="approved">
+              Approved (<span id="count-approved">0</span>)
+            </button>
+            <button class="btn btn-sm btn-outline staff-filter-btn" data-status="rejected">
+              Rejected (<span id="count-rejected">0</span>)
+            </button>
+            <button class="btn btn-sm btn-outline staff-filter-btn" data-status="all">
+              All (<span id="count-total">0</span>)
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Staff Name</th>
+                  <th>Email Address</th>
+                  <th>Registered</th>
+                  <th>Status</th>
+                  <th>Approval Details</th>
+                  <th style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="staff-table-body">
+                <tr>
+                  <td colspan="6" style="text-align:center;color:var(--color-text-muted);padding:var(--spacing-6);">
+                    Loading staff directory…
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           TAB: BUSES
+           ================================================================ -->
+      <section id="tab-buses" class="tab-section" style="display:none;">
+        <div class="card">
+          <div class="card-header flex items-center justify-between flex-wrap gap-3"
+               style="padding-bottom: var(--spacing-4); border-bottom: 1px solid var(--color-border); margin-bottom: var(--spacing-4);">
+            <div>
+              <h2 class="card-title" style="font-size: var(--font-size-xl);">Bus Fleet Management</h2>
+              <p class="card-subtitle">Add, edit, or remove buses and monitor seat utilization.</p>
+            </div>
+            <button id="add-bus-btn" class="btn btn-primary btn-sm">+ Add Bus</button>
+          </div>
+
+          <div id="bus-alert" style="display:none; margin-bottom: var(--spacing-4);"></div>
+
+          <!-- Search -->
+          <div style="margin-bottom: var(--spacing-4);">
+            <input id="bus-search-input" type="text" class="form-input"
+                   placeholder="Search by bus number or route name…"
+                   style="max-width: 380px;">
+          </div>
+
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Bus Number</th>
+                  <th>Route Name</th>
+                  <th style="text-align:center;">Capacity</th>
+                  <th style="text-align:center;">Assigned</th>
+                  <th style="text-align:center;">Available</th>
+                  <th>Status</th>
+                  <th style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="bus-table-body">
+                <tr>
+                  <td colspan="7" style="text-align:center;color:var(--color-text-muted);padding:var(--spacing-6);">
+                    Loading buses…
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           TAB: STUDENTS
+           ================================================================ -->
+      <section id="tab-students" class="tab-section" style="display:none;">
+        <div class="card">
+          <div class="card-header flex items-center justify-between flex-wrap gap-3"
+               style="padding-bottom: var(--spacing-4); border-bottom: 1px solid var(--color-border); margin-bottom: var(--spacing-4);">
+            <div>
+              <h2 class="card-title" style="font-size: var(--font-size-xl);">Student Management</h2>
+              <p class="card-subtitle">Add students, assign or move them between buses, and manage seat numbers.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="refresh-student-btn" class="btn btn-outline btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
+                </svg>
+                Refresh
+              </button>
+              <button id="add-student-btn" class="btn btn-primary btn-sm">+ Add Student</button>
+            </div>
+          </div>
+
+          <div id="student-alert" style="display:none; margin-bottom: var(--spacing-4);"></div>
+
+          <!-- Filters -->
+          <div class="flex items-center gap-3 flex-wrap" style="margin-bottom: var(--spacing-4);">
+            <input id="student-search-input" type="text" class="form-input"
+                   placeholder="Search name or roll number…"
+                   style="max-width: 280px;">
+            <select id="student-filter-bus" class="form-input" style="max-width: 260px;">
+              <option value="all">All Buses</option>
+              <option value="unassigned">Unassigned Students</option>
+            </select>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Roll Number</th>
+                  <th>Bus Assigned</th>
+                  <th style="text-align:center;">Seat</th>
+                  <th>Status</th>
+                  <th>Added</th>
+                  <th style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="student-table-body">
+                <tr>
+                  <td colspan="7" style="text-align:center;color:var(--color-text-muted);padding:var(--spacing-6);">
+                    Loading students…
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           TAB: REPORTS (Phase 4 Multi-Subtab Reporting Center & CSV Export)
+           ================================================================ -->
+      <section id="tab-reports" class="tab-section" style="display:none;">
+        <div class="card" style="margin-bottom: var(--spacing-5);">
+          <div class="flex items-center justify-between flex-wrap gap-3"
+               style="padding-bottom: var(--spacing-4); border-bottom: 1px solid var(--color-border); margin-bottom: var(--spacing-4);">
+            <div>
+              <h2 class="card-title" style="font-size: var(--font-size-xl);">Operational Reports &amp; Analytics</h2>
+              <p class="card-subtitle">Generate comprehensive audit reports, filter by dates and fleet assets, and export to CSV.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="report-export-csv-btn" class="btn btn-primary btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                </svg>
+                Export CSV
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter Control Card -->
+          <div class="filter-card">
+            <div class="flex items-center gap-2 flex-wrap" style="margin-bottom: var(--spacing-3);">
+              <span style="font-size: var(--font-size-xs); font-weight: var(--font-weight-bold); color: var(--color-text-muted);">Presets:</span>
+              <button type="button" class="btn btn-sm btn-outline report-preset-btn" data-preset="today">Today</button>
+              <button type="button" class="btn btn-sm btn-outline report-preset-btn" data-preset="yesterday">Yesterday</button>
+              <button type="button" class="btn btn-sm btn-outline report-preset-btn" data-preset="week">Last 7 Days</button>
+              <button type="button" class="btn btn-sm btn-outline report-preset-btn" data-preset="month">This Month</button>
+            </div>
+            <div class="filter-grid">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" for="report-start-date" style="font-size:var(--font-size-xs);">From Date</label>
+                <input id="report-start-date" type="date" class="form-input" style="padding:var(--spacing-2) var(--spacing-3); font-size:var(--font-size-xs);">
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" for="report-end-date" style="font-size:var(--font-size-xs);">To Date</label>
+                <input id="report-end-date" type="date" class="form-input" style="padding:var(--spacing-2) var(--spacing-3); font-size:var(--font-size-xs);">
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" for="report-bus-filter" style="font-size:var(--font-size-xs);">Filter Bus</label>
+                <select id="report-bus-filter" class="form-input" style="padding:var(--spacing-2) var(--spacing-3); font-size:var(--font-size-xs);">
+                  <option value="">All Buses</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" for="report-staff-filter" style="font-size:var(--font-size-xs);">Filter Staff</label>
+                <select id="report-staff-filter" class="form-input" style="padding:var(--spacing-2) var(--spacing-3); font-size:var(--font-size-xs);">
+                  <option value="">All Staff</option>
+                </select>
+              </div>
+              <div class="flex items-center gap-2">
+                <button id="report-apply-btn" class="btn btn-primary btn-sm" style="flex:1;">Apply</button>
+                <button id="report-reset-btn" class="btn btn-outline btn-sm">Reset</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary Metric Ribbon -->
+          <div class="metric-ribbon">
+            <div class="metric-box">
+              <div class="metric-box-val" id="rep-summary-trips" style="color:var(--color-primary-600);">0</div>
+              <div class="metric-box-lbl">Duties Conducted</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-box-val" id="rep-summary-present" style="color:var(--color-success-dark);">0</div>
+              <div class="metric-box-lbl">Present Students</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-box-val" id="rep-summary-absent" style="color:var(--color-error);">0</div>
+              <div class="metric-box-lbl">Absent Students</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-box-val" id="rep-summary-standing" style="color:var(--color-warning-dark);">0</div>
+              <div class="metric-box-lbl">Standing Riders</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-box-val" id="rep-summary-total" style="color:var(--color-secondary-700);">0</div>
+              <div class="metric-box-lbl">Total Headcount</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-box-val" id="rep-summary-utilization" style="color:var(--color-primary-700);">0%</div>
+              <div class="metric-box-lbl">Fleet Seat Utilization</div>
+            </div>
+          </div>
+
+          <!-- Report Subtabs -->
+          <nav class="subtab-nav" aria-label="Report Views">
+            <button class="subtab-btn active" data-report-tab="daily">📅 Daily Summary</button>
+            <button class="subtab-btn" data-report-tab="buses">🚌 Bus-Wise Report</button>
+            <button class="subtab-btn" data-report-tab="staff">👤 Staff-Wise Report</button>
+            <button class="subtab-btn" data-report-tab="attendance">📝 Student Attendance Log</button>
+            <button class="subtab-btn" data-report-tab="standing">🚶 Standing Passengers Log</button>
+          </nav>
+
+          <!-- Subtab Containers -->
+          <div id="subtab-daily-container" class="report-subtab-view">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th style="text-align:center;">Buses Run</th>
+                    <th style="text-align:center;">Staff on Duty</th>
+                    <th style="text-align:center;">Present Students</th>
+                    <th style="text-align:center;">Absent Students</th>
+                    <th style="text-align:center;">Standing Riders</th>
+                    <th style="text-align:center;">Total Transit Riders</th>
+                    <th style="text-align:center;">Avg Attendance %</th>
+                  </tr>
+                </thead>
+                <tbody id="report-daily-body">
+                  <tr><td colspan="8" style="text-align:center;color:var(--color-text-muted);padding:var(--spacing-6);">Loading daily report…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="subtab-buses-container" class="report-subtab-view" style="display:none;">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Bus #</th>
+                    <th>Route</th>
+                    <th style="text-align:center;">Seating Capacity</th>
+                    <th style="text-align:center;">Assigned Students</th>
+                    <th style="text-align:center;">Capacity Utilization</th>
+                    <th style="text-align:center;">Days Operated</th>
+                    <th style="text-align:center;">Present Marks</th>
+                    <th style="text-align:center;">Absent Marks</th>
+                    <th style="text-align:center;">Standing Riders</th>
+                  </tr>
+                </thead>
+                <tbody id="report-buses-body">
+                  <tr><td colspan="9" style="text-align:center;color:var(--color-text-muted);padding:var(--spacing-6);">Loading bus report…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="subtab-staff-container" class="report-subtab-view" style="display:none;">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Staff Name</th>
+                    <th>Email Address</th>
+                    <th style="text-align:center;">Duties Conducted</th>
+                    <th style="text-align:center;">Completed Duties</th>
+                    <th style="text-align:center;">Present Logged</th>
+                    <th style="text-align:center;">Absent Logged</th>
+                    <th style="text-align:center;">Standing Logged</th>
+                    <th>Last Duty Date</th>
+                  </tr>
+                </thead>
+                <tbody id="report-staff-body">
+                  <tr><td colspan="8" style="text-align:center;color:var(--color-text-muted);padding:var(--spacing-6);">Loading staff report…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="subtab-attendance-container" class="report-subtab-view" style="display:none;">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Student Name</th>
+                    <th>Roll Number</th>
+                    <th>Bus Assigned</th>
+                    <th style="text-align:center;">Seat #</th>
+                    <th>Status</th>
+                    <th>Marked By Staff</th>
+                    <th>Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody id="report-attendance-body">
+                  <tr><td colspan="8" style="text-align:center;color:var(--color-text-muted);padding:var(--spacing-6);">Loading attendance logs…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="subtab-standing-container" class="report-subtab-view" style="display:none;">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Student Name</th>
+                    <th>Roll Number</th>
+                    <th>Bus Rode</th>
+                    <th>Reason</th>
+                    <th>Home Bus</th>
+                    <th>Recorded By Staff</th>
+                    <th>Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody id="report-standing-body">
+                  <tr><td colspan="8" style="text-align:center;color:var(--color-text-muted);padding:var(--spacing-6);">Loading standing rider logs…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================================================================
+           TAB: ANALYTICS (Phase 4 Responsive SVG Visual Analytics)
+           ================================================================ -->
+      <section id="tab-analytics" class="tab-section" style="display:none;">
+        <div class="flex items-center justify-between flex-wrap gap-3" style="margin-bottom: var(--spacing-4);">
+          <div>
+            <h2 style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold);">Advanced Fleet &amp; Attendance Analytics</h2>
+            <p style="color: var(--color-text-muted); font-size: var(--font-size-xs);">Real-time visual charts grounded in live Supabase operational database records.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="btn btn-sm btn-outline analytics-days-btn" data-days="7">7 Days</button>
+            <button class="btn btn-sm btn-primary analytics-days-btn" data-days="14">14 Days</button>
+            <button class="btn btn-sm btn-outline analytics-days-btn" data-days="30">30 Days</button>
+            <button id="refresh-analytics-btn" class="btn btn-outline btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
+              </svg>
+              Refresh
+            </button>
+          </div>
+        </div>
+
+        <div id="analytics-content">
+          <!-- Analytics Top Metrics -->
+          <div class="metric-ribbon" style="margin-bottom: var(--spacing-4);">
+            <div class="metric-box">
+              <div class="metric-box-val" id="ana-metric-avg-daily" style="color:var(--color-primary-600);">…</div>
+              <div class="metric-box-lbl">Avg Daily Attendance</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-box-val" id="ana-metric-attendance-rate" style="color:var(--color-success-dark);">…</div>
+              <div class="metric-box-lbl">Overall Attendance Rate</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-box-val" id="ana-metric-standing-rate" style="color:var(--color-warning-dark);">…</div>
+              <div class="metric-box-lbl">Standing Passenger Load</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-box-val" id="ana-metric-seat-utilization" style="color:var(--color-secondary-700);">…</div>
+              <div class="metric-box-lbl">Fleet Seating Utilization</div>
+            </div>
+          </div>
+
+          <!-- Charts 2x2 Grid -->
+          <div class="grid grid-cols-2" style="gap: var(--spacing-4); margin-bottom: var(--spacing-4);">
+            <!-- Chart 1: Attendance Trends Line/Area Chart -->
+            <div class="chart-card">
+              <div class="chart-header">
+                <span class="chart-title">📈 Daily Attendance Trend (Present vs Standing)</span>
+                <span style="font-size:var(--font-size-xs); color:var(--color-text-muted);" id="chart1-subtitle">Last 14 Days</span>
+              </div>
+              <div id="chart-attendance-trend" class="svg-chart-container" style="min-height:220px;">
+                <div style="text-align:center;padding:var(--spacing-8);color:var(--color-text-muted);">Loading trend chart…</div>
+              </div>
+            </div>
+
+            <!-- Chart 2: Present vs Absent Donut Chart -->
+            <div class="chart-card">
+              <div class="chart-header">
+                <span class="chart-title">🎯 Present vs Absent Ratio</span>
+                <span style="font-size:var(--font-size-xs); color:var(--color-text-muted);" id="chart2-subtitle">Recorded Headcount</span>
+              </div>
+              <div id="chart-present-donut" class="svg-chart-container" style="min-height:220px;">
+                <div style="text-align:center;padding:var(--spacing-8);color:var(--color-text-muted);">Loading gauge chart…</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2" style="gap: var(--spacing-4);">
+            <!-- Chart 3: Standing Student Reason Distribution -->
+            <div class="chart-card">
+              <div class="chart-header">
+                <span class="chart-title">🚶 Standing Student Reason Breakdown</span>
+                <span style="font-size:var(--font-size-xs); color:var(--color-text-muted);">Passenger Logs</span>
+              </div>
+              <div id="chart-standing-reasons" class="svg-chart-container" style="min-height:220px;">
+                <div style="text-align:center;padding:var(--spacing-8);color:var(--color-text-muted);">Loading reason distribution…</div>
+              </div>
+            </div>
+
+            <!-- Chart 4: Fleet Seating Capacity Utilization (Assigned / Capacity * 100) -->
+            <div class="chart-card">
+              <div class="chart-header">
+                <span class="chart-title">🚌 Bus Seating Capacity Utilization</span>
+                <span style="font-size:var(--font-size-xs); color:var(--color-text-muted);">Assigned / Capacity × 100</span>
+              </div>
+              <div id="chart-bus-utilization" class="svg-chart-container" style="min-height:220px; max-height:300px; overflow-y:auto;">
+                <div style="text-align:center;padding:var(--spacing-8);color:var(--color-text-muted);">Loading utilization bars…</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           TAB: AUDIT TRAIL (Phase 4 Administrative Activity Logging)
+           ================================================================ -->
+      <section id="tab-audit" class="tab-section" style="display:none;">
+        <div class="card" style="margin-bottom: var(--spacing-5);">
+          <div class="flex items-center justify-between flex-wrap gap-3"
+               style="padding-bottom: var(--spacing-4); border-bottom: 1px solid var(--color-border); margin-bottom: var(--spacing-4);">
+            <div>
+              <h2 class="card-title" style="font-size: var(--font-size-xl);">Administrative Audit Trail</h2>
+              <p class="card-subtitle">Permanent, tamper-evident log of staff approvals, bus modifications, and student assignments.</p>
+            </div>
+            <button id="refresh-audit-btn" class="btn btn-outline btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
+              </svg>
+              Refresh Audit Logs
+            </button>
+          </div>
+
+          <!-- Audit Filters -->
+          <div class="flex items-center gap-3 flex-wrap" style="margin-bottom: var(--spacing-4);">
+            <select id="audit-action-filter" class="form-input" style="max-width:240px; font-size:var(--font-size-xs);">
+              <option value="">All Actions</option>
+              <option value="STAFF_APPROVED">Staff Approved</option>
+              <option value="STAFF_REJECTED">Staff Rejected</option>
+              <option value="BUS_CREATED">Bus Created</option>
+              <option value="BUS_UPDATED">Bus Updated</option>
+              <option value="BUS_DELETED">Bus Deleted</option>
+              <option value="STUDENT_CREATED">Student Created</option>
+              <option value="STUDENT_ASSIGNED">Student Assigned</option>
+              <option value="STUDENT_MOVED">Student Moved</option>
+              <option value="STUDENT_UNASSIGNED">Student Unassigned</option>
+              <option value="STUDENT_DELETED">Student Deleted</option>
+            </select>
+            <select id="audit-entity-filter" class="form-input" style="max-width:200px; font-size:var(--font-size-xs);">
+              <option value="">All Entity Types</option>
+              <option value="profile">Staff Profiles</option>
+              <option value="bus">Buses</option>
+              <option value="student">Students</option>
+            </select>
+          </div>
+
+          <!-- Audit Table -->
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Action</th>
+                  <th>Entity</th>
+                  <th>Performed By</th>
+                  <th>Event Details</th>
+                </tr>
+              </thead>
+              <tbody id="audit-table-body">
+                <tr><td colspan="5" style="text-align:center;color:var(--color-text-muted);padding:var(--spacing-6);">Loading audit trail…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           SYSTEM VERIFICATION PANEL (Phase 1 preserved, collapsed by default)
+           ================================================================ -->
+      <div class="card" style="margin-top: var(--spacing-8); background-color: var(--color-neutral-50);">
+        <details>
+          <summary style="cursor:pointer; font-size:var(--font-size-sm); font-weight:var(--font-weight-bold); color:var(--color-text-muted); user-select:none;">
+            🔒 System Security &amp; Authorization Tests (Phase 1)
+          </summary>
+          <div style="margin-top: var(--spacing-4);">
+            <p style="font-size: var(--font-size-sm); color: var(--color-text-muted); margin-bottom: var(--spacing-4);">
+              Verify that Express backend middleware strictly verifies your JWT token and validates your administrative role against the database.
+            </p>
+            <div class="flex items-center gap-3 flex-wrap" style="margin-bottom: var(--spacing-4);">
+              <button id="test-admin-check-btn" class="btn btn-outline btn-sm">Run /api/auth/admin-check</button>
+              <button id="test-me-btn" class="btn btn-outline btn-sm">Run /api/auth/me</button>
+            </div>
+            <div id="test-results-container" style="display: none;" class="card" style="background-color: var(--color-neutral-900);">
+              <h3 style="font-size: var(--font-size-xs); color: var(--color-neutral-400); margin-bottom: var(--spacing-2);">Backend Response Output:</h3>
+              <pre id="test-results-output" style="background-color: transparent; color: #22c55e; padding: 0; font-size: var(--font-size-xs); overflow-x: auto; font-family: monospace;"></pre>
+            </div>
+          </div>
+        </details>
+      </div>
+
+    </div><!-- /container -->
+  </main>
+
+  <!-- ======================================================================
+       MODALS
+       ====================================================================== -->
+
+  <!-- BUS FORM MODAL (Add / Edit) -->
+  <div id="modal-bus-form" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="bus-modal-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <span class="modal-title" id="bus-modal-title">Add New Bus</span>
+        <button class="modal-close-btn" aria-label="Close">✕</button>
+      </div>
+      <form id="bus-form" novalidate>
+        <div class="modal-body">
+          <div id="bus-form-alert" style="display:none; margin-bottom:var(--spacing-4);"></div>
+          <div class="form-group">
+            <label class="form-label" for="bus-number-input">Bus Number <span style="color:var(--color-error);">*</span></label>
+            <input id="bus-number-input" type="text" class="form-input" placeholder="e.g. MH-01-AB-1234" required autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bus-route-input">Route Name <span style="color:var(--color-error);">*</span></label>
+            <input id="bus-route-input" type="text" class="form-input" placeholder="e.g. College Gate → City Center" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bus-capacity-input">Seating Capacity <span style="color:var(--color-error);">*</span></label>
+            <input id="bus-capacity-input" type="number" class="form-input" placeholder="e.g. 40" min="1" max="200" required>
+            <p class="field-hint">Enter the number of fixed seats. Standing students are managed separately in Phase 3.</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline modal-close-btn-footer">Cancel</button>
+          <button id="bus-submit-btn" type="submit" class="btn btn-primary">Add Bus</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- BUS DETAILS MODAL -->
+  <div id="modal-bus-details" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="bus-details-modal-title">
+    <div class="modal-dialog modal-dialog-lg">
+      <div class="modal-header">
+        <span class="modal-title" id="bus-details-modal-title">Bus Details</span>
+        <button class="modal-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body" id="bus-details-body">
+        <div class="flex items-center justify-center gap-2" style="padding:var(--spacing-8);color:var(--color-text-muted);">
+          Loading…
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline modal-close-btn-footer">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STUDENT FORM MODAL (Add / Edit) -->
+  <div id="modal-student-form" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="student-modal-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <span class="modal-title" id="student-modal-title">Add New Student</span>
+        <button class="modal-close-btn" aria-label="Close">✕</button>
+      </div>
+      <form id="student-form" novalidate>
+        <div class="modal-body">
+          <div id="student-form-alert" style="display:none; margin-bottom:var(--spacing-4);"></div>
+          <div class="form-group">
+            <label class="form-label" for="student-name-input">Full Name <span style="color:var(--color-error);">*</span></label>
+            <input id="student-name-input" type="text" class="form-input" placeholder="Student's full name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="student-roll-input">Roll Number <span style="color:var(--color-error);">*</span></label>
+            <input id="student-roll-input" type="text" class="form-input" placeholder="e.g. CS2021001" required autocomplete="off">
+          </div>
+          <!-- Bus/Seat assignment: only shown when adding a new student -->
+          <div id="student-bus-seat-section">
+            <hr style="margin: var(--spacing-4) 0; border-color: var(--color-border);">
+            <p style="font-size:var(--font-size-xs); color:var(--color-text-muted); margin-bottom:var(--spacing-3);">
+              Optional: Assign to a bus right away. You can also do this later.
+            </p>
+            <div class="form-group">
+              <label class="form-label" for="student-bus-select">Assign to Bus</label>
+              <select id="student-bus-select" class="form-input">
+                <option value="">No Bus (Unassigned)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="student-seat-input">Seat Number</label>
+              <input id="student-seat-input" type="number" class="form-input" placeholder="Enter seat number (optional)" min="1">
+              <p id="student-seat-hint" class="field-hint"></p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline modal-close-btn-footer">Cancel</button>
+          <button id="student-submit-btn" type="submit" class="btn btn-primary">Add Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ASSIGN / MOVE STUDENT MODAL -->
+  <div id="modal-assign-student" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="assign-modal-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <span class="modal-title" id="assign-modal-title">Assign Bus</span>
+        <button class="modal-close-btn" aria-label="Close">✕</button>
+      </div>
+      <form id="assign-form" novalidate>
+        <div class="modal-body">
+          <div id="assign-form-alert" style="display:none; margin-bottom:var(--spacing-4);"></div>
+          <div class="form-group">
+            <label class="form-label" for="assign-bus-select">Select Bus <span style="color:var(--color-error);">*</span></label>
+            <select id="assign-bus-select" class="form-input" required>
+              <option value="">— Choose a bus —</option>
+            </select>
+            <p id="assign-seat-info" class="field-hint"></p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="assign-seat-input">Seat Number</label>
+            <input id="assign-seat-input" type="number" class="form-input" placeholder="Enter seat number (optional)" min="1">
+            <p class="field-hint">Leave blank to assign to bus without a specific seat.</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline modal-close-btn-footer">Cancel</button>
+          <button id="assign-submit-btn" type="submit" class="btn btn-primary">Assign to Bus</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CONFIRMATION MODAL -->
+  <div id="modal-confirm" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="modal-dialog" style="max-width: 420px;">
+      <div class="modal-header">
+        <span class="modal-title" id="confirm-title">Confirm Action</span>
+        <button class="modal-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirm-message" style="color: var(--color-text-muted); line-height: 1.6;"></p>
+      </div>
+      <div class="modal-footer">
+        <button id="confirm-cancel-btn" class="btn btn-outline">Cancel</button>
+        <button id="confirm-ok-btn" class="btn btn-danger">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       FOOTER (preserved from Phase 1)
+       ==================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div><span>College Bus Management Platform</span> • <span>Admin Protected Workspace</span></div>
+    </div>
+  </footer>
+
+  <!-- Scripts (same load order as Phase 1) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/guards.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/pages/admin-dashboard.js"></script>
+</body>
+</html>

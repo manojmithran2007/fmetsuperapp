@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Today's Duty Report - College Bus Management Platform</title>
+  <meta name="description" content="College Bus Management Platform - Daily Transit Operational Report">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+
+  <style>
+    @media print {
+      .site-header, .staff-subnav, .site-footer, .no-print {
+        display: none !important;
+      }
+      .card {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+      }
+      body {
+        background: #fff !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Navigation -->
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" aria-label="Staff Navigation">
+        <a href="staff-dashboard.html" class="nav-brand">
+          <span class="brand-badge" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-1.1 0-2 .9-2 2v7h2"/>
+              <circle cx="7" cy="17" r="2"/>
+              <path d="M9 17h6"/>
+              <circle cx="17" cy="17" r="2"/>
+            </svg>
+          </span>
+          <span>College Bus Transit <small style="font-size: 11px; opacity: 0.8;">• Staff Portal</small></span>
+        </a>
+
+        <div class="flex items-center gap-4">
+          <div class="user-badge-group">
+            <div class="avatar-circle" id="staff-avatar">S</div>
+            <div class="hide-mobile">
+              <div id="staff-name" style="font-weight: var(--font-weight-bold); font-size: var(--font-size-sm);">Staff Incharge</div>
+              <div id="staff-status" style="font-size: var(--font-size-xs); color: var(--color-success);">● Approved Staff</div>
+            </div>
+          </div>
+          <button id="staff-logout-btn" class="btn btn-outline btn-sm">Sign Out</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Staff Sub-Navigation -->
+      <nav class="staff-subnav no-print" aria-label="Operational Navigation">
+        <a href="staff-dashboard.html" class="staff-subnav-link">
+          <span>🏠</span> Overview
+        </a>
+        <a href="staff-bus.html" class="staff-subnav-link" id="nav-active-bus">
+          <span>🚌</span> Active Bus Duty
+        </a>
+        <a href="bus-attendance.html" class="staff-subnav-link" id="nav-attendance">
+          <span>📋</span> Take Attendance
+        </a>
+        <a href="standing-students.html" class="staff-subnav-link" id="nav-standing">
+          <span>🚶</span> Standing Students
+        </a>
+        <a href="today-report.html" class="staff-subnav-link active" id="nav-report">
+          <span>📊</span> Today's Report
+        </a>
+        <a href="attendance-history.html" class="staff-subnav-link">
+          <span>🕒</span> Duty History
+        </a>
+      </nav>
+
+      <!-- Loading State -->
+      <div id="report-loading" class="card text-center" style="padding: var(--spacing-12);">
+        <div class="spinner"></div>
+        <p style="color: var(--color-text-muted); font-size: var(--font-size-sm); margin-top: var(--spacing-3);">Generating today's operational transit report...</p>
+      </div>
+
+      <!-- Report Container -->
+      <div id="report-container" style="display: none;">
+
+        <!-- Header Card with Actions -->
+        <div class="card" style="margin-bottom: var(--spacing-6); border-left: 4px solid var(--color-primary-600);">
+          <div class="dashboard-title-row">
+            <div>
+              <div class="flex items-center gap-2" style="margin-bottom: var(--spacing-2);">
+                <span class="badge badge-primary">Institutional Daily Transit Report</span>
+                <span class="badge badge-neutral" id="rep-date-badge">September 17, 2026</span>
+                <span class="badge" id="rep-status-badge">In Service</span>
+              </div>
+              <h1 id="rep-bus-title" style="font-size: var(--font-size-2xl);">Bus TN-57-1234 — Daily Operations Sheet</h1>
+              <p id="rep-route-title" style="color: var(--color-text-muted); font-size: var(--font-size-sm); margin-top: 2px;">
+                Route: Madurai &rarr; College Campus
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3 no-print">
+              <button id="print-report-btn" class="btn btn-outline">
+                🖨️ Print / Save PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- Metadata info strip -->
+          <div class="grid grid-cols-3 gap-4" style="margin-top: var(--spacing-4); padding-top: var(--spacing-4); border-top: 1px solid var(--color-neutral-200); font-size: var(--font-size-xs); color: var(--color-text-muted);">
+            <div>Staff Incharge: <strong id="rep-incharge" style="color: var(--color-text-main);">-</strong></div>
+            <div>Duty Start: <strong id="rep-start-time" style="color: var(--color-text-main);">-</strong></div>
+            <div>Duty Completed: <strong id="rep-completed-time" style="color: var(--color-text-main);">-</strong></div>
+          </div>
+        </div>
+
+        <!-- 6 Summary Metrics -->
+        <div class="duty-stat-banner">
+          <div class="duty-stat-box">
+            <div class="duty-stat-num" id="rep-stat-capacity">0</div>
+            <div class="duty-stat-title">Seating Capacity</div>
+          </div>
+          <div class="duty-stat-box">
+            <div class="duty-stat-num" id="rep-stat-assigned">0</div>
+            <div class="duty-stat-title">Assigned Students</div>
+          </div>
+          <div class="duty-stat-box">
+            <div class="duty-stat-num" id="rep-stat-present" style="color: var(--color-success);">0</div>
+            <div class="duty-stat-title">Present</div>
+          </div>
+          <div class="duty-stat-box">
+            <div class="duty-stat-num" id="rep-stat-absent" style="color: var(--color-danger);">0</div>
+            <div class="duty-stat-title">Absent</div>
+          </div>
+          <div class="duty-stat-box">
+            <div class="duty-stat-num" id="rep-stat-standing" style="color: var(--color-warning);">0</div>
+            <div class="duty-stat-title">Standing Count</div>
+          </div>
+          <div class="duty-stat-box" style="background-color: var(--color-primary-50); border-color: var(--color-primary-400);">
+            <div class="duty-stat-num" id="rep-stat-total-travelling">0</div>
+            <div class="duty-stat-title">Total Travelling Today</div>
+          </div>
+        </div>
+
+        <!-- Section 1: Seated Attendance Roster -->
+        <div class="card" style="margin-bottom: var(--spacing-6);">
+          <div class="flex items-center justify-between" style="margin-bottom: var(--spacing-4); padding-bottom: var(--spacing-3); border-bottom: 1px solid var(--color-neutral-200);">
+            <div>
+              <h2 style="font-size: var(--font-size-lg);">Permanently Assigned Students — Attendance Register</h2>
+              <p style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Daily record of regular seated passengers</p>
+            </div>
+            <span class="badge badge-neutral" id="att-roster-badge">0 students</span>
+          </div>
+
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 80px;">Seat #</th>
+                  <th>Student Name</th>
+                  <th>Roll Number</th>
+                  <th style="width: 130px; text-align: center;">Status</th>
+                </tr>
+              </thead>
+              <tbody id="rep-att-tbody">
+                <!-- Dynamically populated via today-report.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 2: Standing Students Roster -->
+        <div class="card">
+          <div class="flex items-center justify-between" style="margin-bottom: var(--spacing-4); padding-bottom: var(--spacing-3); border-bottom: 1px solid var(--color-neutral-200);">
+            <div>
+              <h2 style="font-size: var(--font-size-lg);">Standing / Non-Seated Passengers Log</h2>
+              <p style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Additional riders accommodated without fixed seating for today's trip</p>
+            </div>
+            <span class="badge badge-warning" id="standing-roster-badge">0 standing</span>
+          </div>
+
+          <div id="rep-standing-empty" style="display: none; padding: var(--spacing-6); text-align: center; color: var(--color-text-muted); font-size: var(--font-size-sm);">
+            No standing passengers recorded on this bus today.
+          </div>
+
+          <div id="rep-standing-table-wrap" class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Roll Number</th>
+                  <th>Operational Reason</th>
+                </tr>
+              </thead>
+              <tbody id="rep-standing-tbody">
+                <!-- Dynamically populated via today-report.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div><span>College Bus Management Platform</span> • <span>Today's Transit Report</span></div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/guards.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/pages/today-report.js"></script>
+</body>
+</html>

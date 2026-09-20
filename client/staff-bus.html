@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bus Duty Cockpit - College Bus Management Platform</title>
+  <meta name="description" content="College Bus Management Platform - Active Daily Transit Cockpit">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <!-- Header Navigation -->
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" aria-label="Staff Navigation">
+        <a href="staff-dashboard.html" class="nav-brand">
+          <span class="brand-badge" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-1.1 0-2 .9-2 2v7h2"/>
+              <circle cx="7" cy="17" r="2"/>
+              <path d="M9 17h6"/>
+              <circle cx="17" cy="17" r="2"/>
+            </svg>
+          </span>
+          <span>College Bus Transit <small style="font-size: 11px; opacity: 0.8;">• Staff Portal</small></span>
+        </a>
+
+        <div class="flex items-center gap-4">
+          <div class="user-badge-group">
+            <div class="avatar-circle" id="staff-avatar">S</div>
+            <div class="hide-mobile">
+              <div id="staff-name" style="font-weight: var(--font-weight-bold); font-size: var(--font-size-sm);">Staff Incharge</div>
+              <div id="staff-status" style="font-size: var(--font-size-xs); color: var(--color-success);">● Approved Staff</div>
+            </div>
+          </div>
+          <button id="staff-logout-btn" class="btn btn-outline btn-sm">Sign Out</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Staff Sub-Navigation -->
+      <nav class="staff-subnav" aria-label="Operational Navigation">
+        <a href="staff-dashboard.html" class="staff-subnav-link">
+          <span>🏠</span> Overview
+        </a>
+        <a href="staff-bus.html" class="staff-subnav-link active" id="nav-active-bus">
+          <span>🚌</span> Active Bus Duty
+        </a>
+        <a href="bus-attendance.html" class="staff-subnav-link" id="nav-attendance">
+          <span>📋</span> Take Attendance
+        </a>
+        <a href="standing-students.html" class="staff-subnav-link" id="nav-standing">
+          <span>🚶</span> Standing Students
+        </a>
+        <a href="today-report.html" class="staff-subnav-link" id="nav-report">
+          <span>📊</span> Today's Report
+        </a>
+        <a href="attendance-history.html" class="staff-subnav-link">
+          <span>🕒</span> Duty History
+        </a>
+      </nav>
+
+      <!-- Loading State -->
+      <div id="duty-loading" class="card text-center" style="padding: var(--spacing-12);">
+        <div class="spinner"></div>
+        <p style="color: var(--color-text-muted); font-size: var(--font-size-sm); margin-top: var(--spacing-3);">Loading active duty cockpit...</p>
+      </div>
+
+      <!-- No Active Duty Warning (If staff hasn't claimed a bus yet) -->
+      <div id="no-duty-card" class="card text-center" style="display: none; padding: var(--spacing-12); border-top: 4px solid var(--color-warning);">
+        <span style="font-size: 3rem;">🚌</span>
+        <h2 style="font-size: var(--font-size-2xl); margin-top: var(--spacing-3);">No Active Bus Duty Today</h2>
+        <p style="color: var(--color-text-muted); font-size: var(--font-size-sm); max-width: 480px; margin: var(--spacing-2) auto var(--spacing-6);">
+          You have not claimed a bus for duty today yet. Please go to the overview dashboard to select an available bus from the daily fleet.
+        </p>
+        <a href="staff-dashboard.html" class="btn btn-primary">
+          &larr; Go to Available Buses
+        </a>
+      </div>
+
+      <!-- Active Duty Content -->
+      <div id="duty-content" style="display: none;">
+
+        <!-- Active Bus Header Card -->
+        <div class="card" style="margin-bottom: var(--spacing-6); border-left: 4px solid var(--color-primary-600);">
+          <div class="dashboard-title-row">
+            <div>
+              <div class="flex items-center gap-2" style="margin-bottom: var(--spacing-2);">
+                <span class="badge badge-primary">Active Transit Cockpit</span>
+                <span class="badge" id="duty-status-badge">In Service</span>
+                <span class="badge badge-neutral" id="duty-date-badge">Today</span>
+              </div>
+              <h1 id="duty-bus-title" style="font-size: var(--font-size-3xl); color: var(--color-primary-800);">Bus TN-57-1234</h1>
+              <p id="duty-route-title" style="color: var(--color-text-muted); font-size: var(--font-size-base); margin-top: 2px;">Route: Madurai &rarr; College Campus</p>
+              <div style="font-size: var(--font-size-xs); color: var(--color-text-subtle); margin-top: var(--spacing-2);">
+                <span>Incharge: <strong id="duty-incharge-name">-</strong></span> &bull;
+                <span>Duty Started: <strong id="duty-start-time">-</strong></span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 flex-wrap">
+              <button id="add-student-btn" class="btn btn-outline">
+                + Add Student
+              </button>
+              <button id="complete-duty-btn" class="btn btn-primary">
+                Complete Duty
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Operational Summary Counters (Section 20 requirement) -->
+        <div class="duty-stat-banner">
+          <div class="duty-stat-box">
+            <div class="duty-stat-num" id="cockpit-stat-capacity">0</div>
+            <div class="duty-stat-title">Seating Capacity</div>
+          </div>
+          <div class="duty-stat-box">
+            <div class="duty-stat-num" id="cockpit-stat-assigned">0</div>
+            <div class="duty-stat-title">Assigned Students</div>
+          </div>
+          <div class="duty-stat-box">
+            <div class="duty-stat-num" id="cockpit-stat-present" style="color: var(--color-success);">0</div>
+            <div class="duty-stat-title">Present</div>
+          </div>
+          <div class="duty-stat-box">
+            <div class="duty-stat-num" id="cockpit-stat-absent" style="color: var(--color-danger);">0</div>
+            <div class="duty-stat-title">Absent</div>
+          </div>
+          <div class="duty-stat-box">
+            <div class="duty-stat-num" id="cockpit-stat-standing" style="color: var(--color-warning);">0</div>
+            <div class="duty-stat-title">Standing Count</div>
+          </div>
+          <div class="duty-stat-box" style="background-color: var(--color-primary-50); border-color: var(--color-primary-400);">
+            <div class="duty-stat-num" id="cockpit-stat-total-travelling">0</div>
+            <div class="duty-stat-title">Total Travelling Today</div>
+          </div>
+        </div>
+
+        <!-- Workflow Navigation Actions -->
+        <div class="grid grid-cols-3 gap-6" style="margin-bottom: var(--spacing-8);">
+          <a id="btn-goto-attendance" href="bus-attendance.html" class="card" style="text-decoration: none; padding: var(--spacing-5); border: 1px solid var(--color-neutral-200); box-shadow: var(--shadow-sm); transition: transform 150ms ease;">
+            <div class="flex items-center gap-3">
+              <span style="font-size: 2rem;">📋</span>
+              <div>
+                <strong style="color: var(--color-primary-700); font-size: var(--font-size-base); display: block;">Take Attendance &rarr;</strong>
+                <p style="color: var(--color-text-muted); font-size: var(--font-size-xs); margin-top: 2px;">Record present/absent for seated passengers</p>
+              </div>
+            </div>
+          </a>
+
+          <a id="btn-goto-standing" href="standing-students.html" class="card" style="text-decoration: none; padding: var(--spacing-5); border: 1px solid var(--color-neutral-200); box-shadow: var(--shadow-sm); transition: transform 150ms ease;">
+            <div class="flex items-center gap-3">
+              <span style="font-size: 2rem;">🚶</span>
+              <div>
+                <strong style="color: var(--color-primary-700); font-size: var(--font-size-base); display: block;">Standing Students &rarr;</strong>
+                <p style="color: var(--color-text-muted); font-size: var(--font-size-xs); margin-top: 2px;">Add overflow or route-change riders</p>
+              </div>
+            </div>
+          </a>
+
+          <a id="btn-goto-report" href="today-report.html" class="card" style="text-decoration: none; padding: var(--spacing-5); border: 1px solid var(--color-neutral-200); box-shadow: var(--shadow-sm); transition: transform 150ms ease;">
+            <div class="flex items-center gap-3">
+              <span style="font-size: 2rem;">📊</span>
+              <div>
+                <strong style="color: var(--color-primary-700); font-size: var(--font-size-base); display: block;">Today's Report &rarr;</strong>
+                <p style="color: var(--color-text-muted); font-size: var(--font-size-xs); margin-top: 2px;">Print or review formal daily transit sheet</p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Permanently Assigned Students Roster Table -->
+        <div class="card">
+          <div class="flex items-center justify-between flex-wrap gap-4" style="margin-bottom: var(--spacing-4); padding-bottom: var(--spacing-3); border-bottom: 1px solid var(--color-neutral-200);">
+            <div>
+              <h2 style="font-size: var(--font-size-lg);">Permanently Assigned Students Roster</h2>
+              <p style="font-size: var(--font-size-xs); color: var(--color-text-muted);">
+                Students allocated a fixed seat on this bus by administration.
+              </p>
+            </div>
+            <span id="roster-count-badge" class="badge badge-neutral">0 students</span>
+          </div>
+
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 80px;">Seat #</th>
+                  <th>Student Name</th>
+                  <th>Roll Number</th>
+                  <th style="width: 120px;">Seat Status</th>
+                </tr>
+              </thead>
+              <tbody id="assigned-students-tbody">
+                <!-- Dynamically populated via staff-bus.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Complete Duty Modal -->
+  <div id="complete-duty-modal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 style="font-size: var(--font-size-lg);">Complete Today's Duty</h3>
+        <button class="modal-close" id="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: var(--spacing-6);">
+        <p style="font-size: var(--font-size-sm); color: var(--color-text-muted); margin-bottom: var(--spacing-4);">
+          Completing duty marks your daily route as <strong>Completed</strong>. All student attendance and standing logs are preserved permanently in institutional history.
+        </p>
+        <div class="flex justify-end gap-3">
+          <button id="modal-cancel-btn" class="btn btn-outline">Cancel</button>
+          <button id="modal-confirm-btn" class="btn btn-primary">Confirm & Complete Duty</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Staff Add Student Modal -->
+  <div id="add-student-modal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 style="font-size: var(--font-size-lg);">Add Student to this Bus</h3>
+        <button class="modal-close" id="student-modal-close-btn">&times;</button>
+      </div>
+      <form id="add-student-form" style="padding: var(--spacing-6);">
+        <div class="form-group" style="margin-bottom: var(--spacing-4);">
+          <label class="form-label" for="new-student-name">Full Name *</label>
+          <input type="text" id="new-student-name" class="form-input" placeholder="e.g. Rahul Sharma" required />
+        </div>
+        <div class="form-group" style="margin-bottom: var(--spacing-4);">
+          <label class="form-label" for="new-student-roll">Roll Number *</label>
+          <input type="text" id="new-student-roll" class="form-input" placeholder="e.g. 21CS045" required />
+          <p class="form-hint">Must be a unique collegiate roll number.</p>
+        </div>
+        <div class="form-group" style="margin-bottom: var(--spacing-6);">
+          <label class="form-label" for="new-student-seat">Seat Number (Optional)</label>
+          <input type="number" id="new-student-seat" class="form-input" placeholder="e.g. 15" min="1" />
+          <p class="form-hint" id="new-student-seat-hint">Must be between 1 and bus capacity.</p>
+        </div>
+        <div class="flex justify-end gap-3">
+          <button type="button" id="student-modal-cancel-btn" class="btn btn-outline">Cancel</button>
+          <button type="submit" id="save-student-btn" class="btn btn-primary">Add Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div><span>College Bus Management Platform</span> • <span>Phase 3 Staff Operations</span></div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/guards.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/pages/staff-bus.js"></script>
+</body>
+</html>

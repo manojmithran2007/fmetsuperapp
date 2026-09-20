@@ -1,0 +1,149 @@
+/**
+ * COLLEGE BUS MANAGEMENT PLATFORM - DESIGN SYSTEM TOKENS
+ * Source of truth for visual tokens across the platform
+ */
+
+:root {
+  /* ==========================================================================
+     COLOR PALETTES
+     ========================================================================== */
+
+  /* Primary Palette (Collegiate Bus Crimson) */
+  --color-primary-50: #fef2f3;
+  --color-primary-100: #fde6e8;
+  --color-primary-200: #fbd0d5;
+  --color-primary-300: #f7aab3;
+  --color-primary-400: #f17585;
+  --color-primary-500: #e51a35;
+  --color-primary-600: #cc112b;
+  --color-primary-700: #ab0d23;
+  --color-primary-800: #8c0f20;
+  --color-primary-900: #75121f;
+  --color-primary-950: #41040c;
+
+  /* Secondary Palette (Institutional Navy / Slate) */
+  --color-secondary-50: #f0f4f8;
+  --color-secondary-100: #d9e2ec;
+  --color-secondary-200: #bcccdc;
+  --color-secondary-300: #9fb3c8;
+  --color-secondary-400: #829ab1;
+  --color-secondary-500: #627d98;
+  --color-secondary-600: #486581;
+  --color-secondary-700: #334e68;
+  --color-secondary-800: #243b53;
+  --color-secondary-900: #102a43;
+  --color-secondary-950: #0b1a2a;
+
+  /* Accent Palette (Transit Warning Amber / Gold) */
+  --color-accent-50: #fffbeb;
+  --color-accent-100: #fef3c7;
+  --color-accent-200: #fde68a;
+  --color-accent-300: #fcd34d;
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+  --color-accent-700: #b45309;
+  --color-accent-800: #92400e;
+  --color-accent-900: #78350f;
+  --color-accent-950: #451a03;
+
+  /* Neutral Palette (Institutional Charcoal / Slate) */
+  --color-neutral-50: #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+  --color-neutral-950: #020617;
+
+  /* Semantic Colors */
+  --color-success: #10b981;
+  --color-success-light: #ecfdf5;
+  --color-success-border: #a7f3d0;
+  --color-success-dark: #065f46;
+
+  --color-warning: #f59e0b;
+  --color-warning-light: #fffbeb;
+  --color-warning-border: #fde68a;
+  --color-warning-dark: #92400e;
+
+  --color-error: #ef4444;
+  --color-error-light: #fef2f2;
+  --color-error-border: #fecaca;
+  --color-error-dark: #991b1b;
+
+  /* Common Surfaces */
+  --color-bg-body: var(--color-neutral-50);
+  --color-bg-card: #ffffff;
+  --color-bg-input: #ffffff;
+  --color-border: var(--color-neutral-200);
+  --color-text-main: var(--color-neutral-900);
+  --color-text-muted: var(--color-neutral-600);
+  --color-text-subtle: var(--color-neutral-500);
+
+  /* ==========================================================================
+     TYPOGRAPHY TOKENS (Roboto)
+     ========================================================================== */
+  --font-family-base: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --font-size-xs: 0.75rem;     /* 12px */
+  --font-size-sm: 0.875rem;    /* 14px */
+  --font-size-base: 1rem;      /* 16px */
+  --font-size-lg: 1.125rem;    /* 18px */
+  --font-size-xl: 1.25rem;     /* 20px */
+  --font-size-2xl: 1.5rem;     /* 24px */
+  --font-size-3xl: 1.875rem;   /* 30px */
+  --font-size-4xl: 2.25rem;    /* 36px */
+
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+
+  /* ==========================================================================
+     SPACING TOKENS
+     ========================================================================== */
+  --spacing-0: 0px;
+  --spacing-1: 0.25rem;   /* 4px */
+  --spacing-2: 0.5rem;    /* 8px */
+  --spacing-3: 0.75rem;   /* 12px */
+  --spacing-4: 1rem;      /* 16px */
+  --spacing-5: 1.25rem;   /* 20px */
+  --spacing-6: 1.5rem;    /* 24px */
+  --spacing-8: 2rem;      /* 32px */
+  --spacing-10: 2.5rem;   /* 40px */
+  --spacing-12: 3rem;     /* 48px */
+
+  /* ==========================================================================
+     BORDER RADIUS TOKENS
+     ========================================================================== */
+  --radius-none: 0px;
+  --radius-sm: 0.25rem;   /* 4px */
+  --radius-md: 0.375rem;  /* 6px */
+  --radius-lg: 0.5rem;    /* 8px */
+  --radius-xl: 0.75rem;   /* 12px */
+  --radius-2xl: 1rem;     /* 16px */
+  --radius-full: 9999px;
+
+  /* ==========================================================================
+     BOX SHADOW TOKENS
+     ========================================================================== */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+}
