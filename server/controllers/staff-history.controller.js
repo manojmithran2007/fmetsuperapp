@@ -38,12 +38,15 @@ async function handleGetTodayReport(req, res, next) {
     }
 
     // 2. Fetch assignment for date
-    const { data: assignment } = await supabaseAdmin
+    const { data: assignmentRows } = await supabaseAdmin
       .from('daily_bus_assignments')
       .select('id, assignment_date, start_time, completed_at, status, staff_profiles(full_name, email)')
       .eq('bus_id', busId)
       .eq('assignment_date', date)
-      .maybeSingle();
+      .order('created_at', { ascending: false })
+      .limit(1);
+
+    const assignment = assignmentRows && assignmentRows.length > 0 ? assignmentRows[0] : null;
 
     // 3. Fetch assigned students
     const { data: assignedStudents } = await supabaseAdmin

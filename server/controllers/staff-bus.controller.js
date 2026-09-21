@@ -141,13 +141,15 @@ async function handleClaimBus(req, res, next) {
     }
 
     // 2. Check if staff already has an active in_service duty today
-    const { data: existingStaffDuty } = await supabaseAdmin
+    const { data: existingStaffDutyList } = await supabaseAdmin
       .from('daily_bus_assignments')
       .select('id, bus_id, status, buses(bus_number)')
       .eq('staff_id', staffId)
       .eq('assignment_date', today)
       .eq('status', 'in_service')
-      .maybeSingle();
+      .limit(1);
+
+    const existingStaffDuty = existingStaffDutyList && existingStaffDutyList.length > 0 ? existingStaffDutyList[0] : null;
 
     if (existingStaffDuty) {
       return res.status(400).json({
@@ -216,13 +218,12 @@ async function handleGetActiveBus(req, res, next) {
     const staffId = req.profile.id;
 
     // Find assignment for today
-    const { data: assignment, error: assignErr } = await supabaseAdmin
+    const { data: assignments, error: assignErr } = await supabaseAdmin
       .from('daily_bus_assignments')
       .select('id, assignment_date, bus_id, staff_id, start_time, completed_at, status, buses(id, bus_number, route_name, seating_capacity)')
       .eq('staff_id', staffId)
       .eq('assignment_date', today)
-      .order('created_at', { ascending: false })
-      .maybeSingle();
+      .order('created_at', { ascending: false });
 
     if (assignErr) {
       const err = new Error('Failed to fetch active duty: ' + assignErr.message);
@@ -230,7 +231,7 @@ async function handleGetActiveBus(req, res, next) {
       throw err;
     }
 
-    if (!assignment) {
+    if (!assignments || assignments.length === 0) {
       return res.json({
         success: true,
         hasActiveDuty: false,
@@ -239,8 +240,20 @@ async function handleGetActiveBus(req, res, next) {
       });
     }
 
+    // Prefer in_service duty if one exists, otherwise most recent duty today
+    const assignment = assignments.find(a => a.status === 'in_service') || assignments[0];
+
     const bus = assignment.buses;
     const busId = assignment.bus_id;
+
+    if (!bus) {
+      return res.json({
+        success: true,
+        hasActiveDuty: false,
+        activeDuty: null,
+        date: today
+      });
+    }
 
     // Fetch assigned students count
     const { count: assignedCount } = await supabaseAdmin
@@ -329,10 +342,11 @@ async function handleCompleteBusDuty(req, res, next) {
     if (assignmentId) {
       query = query.eq('id', assignmentId);
     } else {
-      query = query.eq('status', 'in_service');
+      query = query.eq('status', 'in_service').order('created_at', { ascending: false });
     }
 
-    const { data: duty, error: dutyErr } = await query.maybeSingle();
+    const { data: dutyRows, error: dutyErr } = await query.limit(1);
+    const duty = dutyRows && dutyRows.length > 0 ? dutyRows[0] : null;
 
     if (dutyErr || !duty) {
       return res.status(404).json({ success: false, error: 'No active duty found to complete for today.' });
