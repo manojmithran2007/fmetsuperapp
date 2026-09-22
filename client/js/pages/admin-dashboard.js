@@ -1693,35 +1693,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ==========================================================================
-  // 15. VERIFICATION PANEL (Phase 1 preserved)
-  // ==========================================================================
-  const resultsContainer = document.getElementById('test-results-container');
-  const resultsOutput    = document.getElementById('test-results-output');
-
-  document.getElementById('test-admin-check-btn')?.addEventListener('click', async () => {
-    if (resultsContainer) resultsContainer.style.display = 'block';
-    if (resultsOutput)    resultsOutput.textContent = 'Testing /api/auth/admin-check…';
-    try {
-      const res = await window.Api.checkAdminAccess();
-      if (resultsOutput) resultsOutput.textContent = JSON.stringify(res, null, 2);
-    } catch (err) {
-      if (resultsOutput) resultsOutput.textContent = `Error: ${err.message}\nStatus: ${err.status}`;
-    }
-  });
-
-  document.getElementById('test-me-btn')?.addEventListener('click', async () => {
-    if (resultsContainer) resultsContainer.style.display = 'block';
-    if (resultsOutput)    resultsOutput.textContent = 'Testing /api/auth/me…';
-    try {
-      const res = await window.Api.getMe();
-      if (resultsOutput) resultsOutput.textContent = JSON.stringify(res, null, 2);
-    } catch (err) {
-      if (resultsOutput) resultsOutput.textContent = `Error: ${err.message}\nStatus: ${err.status}`;
-    }
-  });
-
-  // ==========================================================================
-  // 13. BOOT — load Overview tab and pre-fetch bus dropdown data
+  // BOOT — load Overview tab and pre-fetch bus dropdown data
   // ==========================================================================
   switchTab('overview');
   loadBusesForDropdowns(); // pre-warm dropdown cache in background

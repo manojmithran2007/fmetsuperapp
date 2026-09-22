@@ -1,6 +1,6 @@
 /**
  * Staff Operations Routes (server/routes/staff.routes.js)
- * Endpoints for Phase 3: Daily Bus Operations, Attendance, Standing Students & History.
+ * Endpoints for Daily Bus Operations, Attendance, Standing Students & History.
  * Strictly protected: requires authenticated session + approved staff role.
  */
 

@@ -39,7 +39,7 @@ app.use(errorHandler);
 // Start Server
 const server = app.listen(env.PORT, () => {
   console.log('================================================================');
-  console.log(`  COLLEGE BUS MANAGEMENT PLATFORM - PRODUCTION SERVER (PHASE 4)`);
+  console.log(`  COLLEGE BUS MANAGEMENT PLATFORM - PRODUCTION SERVER`);
   console.log(`  Running on: http://localhost:${env.PORT}`);
   console.log(`  Health API: http://localhost:${env.PORT}/api/health`);
   console.log(`  Supabase:   ${env.isConfigured ? 'CONNECTED' : 'WAITING FOR CREDENTIALS IN .env'}`);

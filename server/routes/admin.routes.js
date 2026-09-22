@@ -23,12 +23,12 @@ router.get('/analytics',         dashboardController.handleGetAnalytics);
 router.get('/analytics/advanced', dashboardController.handleGetAdvancedAnalytics);
 
 // ---------------------------------------------------------------------------
-// Today's Duty Fleet Monitoring (Phase 4 Cockpit)
+// Today's Duty Fleet Monitoring
 // ---------------------------------------------------------------------------
 router.get('/monitoring/today', monitoringController.handleGetTodayMonitoring);
 
 // ---------------------------------------------------------------------------
-// Reports & CSV Export (Phase 4)
+// Reports & CSV Export
 // ---------------------------------------------------------------------------
 router.get('/reports/daily',      reportsController.handleGetDailyReports);
 router.get('/reports/buses',      reportsController.handleGetBusReports);
@@ -38,19 +38,19 @@ router.get('/reports/standing',   reportsController.handleGetStandingReports);
 router.get('/reports/export',     reportsController.handleExportCSV);
 
 // ---------------------------------------------------------------------------
-// Audit Trail (Phase 4)
+// Audit Trail
 // ---------------------------------------------------------------------------
 router.get('/audit-logs', auditController.handleGetAuditLogs);
 
 // ---------------------------------------------------------------------------
-// Staff Management (Phase 1 — preserved exactly)
+// Staff Management
 // ---------------------------------------------------------------------------
 router.get('/staff',              adminController.handleGetStaffList);
 router.post('/staff/:id/approve', adminController.handleApproveStaff);
 router.post('/staff/:id/reject',  adminController.handleRejectStaff);
 
 // ---------------------------------------------------------------------------
-// Bus Management (Phase 2)
+// Bus Management
 // ---------------------------------------------------------------------------
 router.get('/buses',        busController.handleGetBuses);
 router.get('/buses/:id',    busController.handleGetBusDetails);
@@ -59,7 +59,7 @@ router.put('/buses/:id',    busController.handleUpdateBus);
 router.delete('/buses/:id', busController.handleDeleteBus);
 
 // ---------------------------------------------------------------------------
-// Student Management (Phase 2)
+// Student Management
 // ---------------------------------------------------------------------------
 router.get('/students',                   studentController.handleGetStudents);
 router.post('/students',                  studentController.handleCreateStudent);

@@ -307,7 +307,7 @@
           <div>
             <div class="flex items-center gap-2" style="margin-bottom: var(--spacing-2);">
               <span class="badge badge-primary">Admin Dashboard</span>
-              <span class="badge badge-success">Phase 4 Production</span>
+              <span class="badge badge-success">Active System</span>
             </div>
             <h1 style="font-size: var(--font-size-3xl);">Administrator Command Center</h1>
             <p style="color: var(--color-text-muted);">
@@ -1085,30 +1085,6 @@
         </div>
       </section>
 
-      <!-- ================================================================
-           SYSTEM VERIFICATION PANEL (Phase 1 preserved, collapsed by default)
-           ================================================================ -->
-      <div class="card" style="margin-top: var(--spacing-8); background-color: var(--color-neutral-50);">
-        <details>
-          <summary style="cursor:pointer; font-size:var(--font-size-sm); font-weight:var(--font-weight-bold); color:var(--color-text-muted); user-select:none;">
-            🔒 System Security &amp; Authorization Tests (Phase 1)
-          </summary>
-          <div style="margin-top: var(--spacing-4);">
-            <p style="font-size: var(--font-size-sm); color: var(--color-text-muted); margin-bottom: var(--spacing-4);">
-              Verify that Express backend middleware strictly verifies your JWT token and validates your administrative role against the database.
-            </p>
-            <div class="flex items-center gap-3 flex-wrap" style="margin-bottom: var(--spacing-4);">
-              <button id="test-admin-check-btn" class="btn btn-outline btn-sm">Run /api/auth/admin-check</button>
-              <button id="test-me-btn" class="btn btn-outline btn-sm">Run /api/auth/me</button>
-            </div>
-            <div id="test-results-container" style="display: none;" class="card" style="background-color: var(--color-neutral-900);">
-              <h3 style="font-size: var(--font-size-xs); color: var(--color-neutral-400); margin-bottom: var(--spacing-2);">Backend Response Output:</h3>
-              <pre id="test-results-output" style="background-color: transparent; color: #22c55e; padding: 0; font-size: var(--font-size-xs); overflow-x: auto; font-family: monospace;"></pre>
-            </div>
-          </div>
-        </details>
-      </div>
-
     </div><!-- /container -->
   </main>
 
@@ -1137,7 +1113,7 @@
           <div class="form-group">
             <label class="form-label" for="bus-capacity-input">Seating Capacity <span style="color:var(--color-error);">*</span></label>
             <input id="bus-capacity-input" type="number" class="form-input" placeholder="e.g. 40" min="1" max="200" required>
-            <p class="field-hint">Enter the number of fixed seats. Standing students are managed separately in Phase 3.</p>
+            <p class="field-hint">Enter the total seating capacity for this bus.</p>
           </div>
         </div>
         <div class="modal-footer">

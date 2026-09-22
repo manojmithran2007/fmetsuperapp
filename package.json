@@ -1,7 +1,7 @@
 {
   "name": "college-bus-management",
   "version": "1.0.0",
-  "description": "College Bus Management Platform - Phase 1 Foundation",
+  "description": "College Bus Management System - Transit Management, Attendance, and Fleet Analytics",
   "main": "server/server.js",
   "type": "commonjs",
   "scripts": {

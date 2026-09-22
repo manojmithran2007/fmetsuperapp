@@ -67,18 +67,8 @@ const Api = {
     return this.request('/auth/me', { method: 'GET' });
   },
 
-  // Admin access test endpoint
-  async checkAdminAccess() {
-    return this.request('/auth/admin-check', { method: 'GET' });
-  },
-
-  // Staff access test endpoint
-  async checkStaffAccess() {
-    return this.request('/auth/staff-check', { method: 'GET' });
-  },
-
   // -------------------------------------------------------------------------
-  // Admin Staff Management (Phase 1)
+  // Admin Staff Management
   // -------------------------------------------------------------------------
   async getStaffList(status = 'all') {
     return this.request(`/admin/staff?status=${encodeURIComponent(status)}`, { method: 'GET' });
@@ -93,7 +83,7 @@ const Api = {
   },
 
   // -------------------------------------------------------------------------
-  // Dashboard & Analytics (Phase 2)
+  // Dashboard & Analytics
   // -------------------------------------------------------------------------
   async getDashboardStats() {
     return this.request('/admin/dashboard/stats', { method: 'GET' });
@@ -108,7 +98,7 @@ const Api = {
   },
 
   // -------------------------------------------------------------------------
-  // Bus Management (Phase 2)
+  // Bus Management
   // -------------------------------------------------------------------------
   async getBuses(search = '') {
     const qs = search ? `?search=${encodeURIComponent(search)}` : '';
@@ -138,7 +128,7 @@ const Api = {
   },
 
   // -------------------------------------------------------------------------
-  // Student Management (Phase 2)
+  // Student Management
   // -------------------------------------------------------------------------
   async getStudents({ search = '', busId = '' } = {}) {
     const params = new URLSearchParams();
@@ -185,7 +175,7 @@ const Api = {
   },
 
   // =========================================================================
-  // Phase 3: Staff Daily Bus Operations
+  // Staff Daily Bus Operations
   // =========================================================================
   async getStaffAvailableBuses(date = '') {
     const qs = date ? `?date=${encodeURIComponent(date)}` : '';
@@ -268,7 +258,7 @@ const Api = {
   },
 
   // =========================================================================
-  // Phase 4: Monitoring, Reports, Analytics & Audit Trail
+  // Fleet Monitoring, Reports, Analytics & Audit Trail
   // =========================================================================
   async getAdminTodayMonitoring() {
     return this.request('/admin/monitoring/today', { method: 'GET' });
