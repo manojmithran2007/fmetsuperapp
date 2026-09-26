@@ -94,6 +94,8 @@ async function handleGetTodayReport(req, res, next) {
       .from('daily_standing_log')
       .select(`
         id,
+        student_name,
+        student_roll,
         standing_reason,
         created_at,
         students (
@@ -106,8 +108,8 @@ async function handleGetTodayReport(req, res, next) {
 
     const standingList = (standingRows || []).map(st => ({
       id: st.id,
-      fullName: st.students?.full_name || 'Unknown',
-      rollNumber: st.students?.roll_number || 'N/A',
+      fullName: st.student_name || st.students?.full_name || 'Unknown',
+      rollNumber: st.student_roll || st.students?.roll_number || 'N/A',
       reason: st.standing_reason,
       createdAt: st.created_at
     }));
@@ -320,6 +322,8 @@ async function handleGetHistoricalDetail(req, res, next) {
       .from('daily_standing_log')
       .select(`
         id,
+        student_name,
+        student_roll,
         standing_reason,
         created_at,
         students (
@@ -347,8 +351,8 @@ async function handleGetHistoricalDetail(req, res, next) {
 
     const standingRecords = (standingList || []).map(st => ({
       id: st.id,
-      studentName: st.students?.full_name || 'Unknown',
-      rollNumber: st.students?.roll_number || 'N/A',
+      studentName: st.student_name || st.students?.full_name || 'Unknown',
+      rollNumber: st.student_roll || st.students?.roll_number || 'N/A',
       reason: st.standing_reason
     }));
 

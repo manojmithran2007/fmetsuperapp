@@ -41,6 +41,8 @@ async function handleGetTodayStanding(req, res, next) {
         log_date,
         bus_id,
         student_id,
+        student_name,
+        student_roll,
         standing_reason,
         created_at,
         students (
@@ -72,8 +74,8 @@ async function handleGetTodayStanding(req, res, next) {
       date: l.log_date,
       busId: l.bus_id,
       studentId: l.student_id,
-      studentName: l.students?.full_name || 'Unknown',
-      rollNumber: l.students?.roll_number || 'N/A',
+      studentName: l.student_name || l.students?.full_name || 'Unknown',
+      rollNumber: l.student_roll || l.students?.roll_number || 'N/A',
       regularBusNumber: l.students?.buses?.bus_number || 'Unassigned',
       regularSeatNumber: l.students?.seat_number || 'None',
       standingReason: l.standing_reason,
@@ -95,7 +97,7 @@ async function handleGetTodayStanding(req, res, next) {
 
 // ---------------------------------------------------------------------------
 // POST /api/staff/standing
-// Adds a standing student to a bus for the day
+// Adds a standing student to a bus for the day (direct entry supported)
 // ---------------------------------------------------------------------------
 async function handleAddStandingStudent(req, res, next) {
   try {
@@ -103,10 +105,17 @@ async function handleAddStandingStudent(req, res, next) {
       return res.status(503).json({ success: false, error: 'Backend not configured.' });
     }
 
-    const { busId, studentId, rollNumber, reason, assignmentId, date } = req.body;
+    const { busId, studentName, rollNumber, studentId, reason, assignmentId, date } = req.body;
 
     if (!busId) {
       return res.status(400).json({ success: false, error: 'Bus ID is required.' });
+    }
+
+    const cleanName = (studentName || '').trim();
+    const cleanRoll = (rollNumber || '').trim().toUpperCase();
+
+    if (!cleanRoll) {
+      return res.status(400).json({ success: false, error: 'Student roll number is required.' });
     }
 
     if (!reason) {
@@ -124,74 +133,76 @@ async function handleAddStandingStudent(req, res, next) {
     const logDate = date || getTodayDateString();
     const staffId = req.profile.id;
 
-    // 1. Identify student
-    let resolvedStudentId = studentId;
-    let studentObj = null;
+    // 1. Check if student matches an existing record in regular students list (optional link)
+    let resolvedStudentId = studentId || null;
+    let finalStudentName = cleanName;
+    let regularBusNumber = 'Unassigned';
 
-    if (!resolvedStudentId && rollNumber) {
-      const { data: foundStudent, error: findErr } = await supabaseAdmin
+    if (cleanRoll) {
+      const { data: matchedStudent } = await supabaseAdmin
         .from('students')
-        .select('id, full_name, roll_number, bus_id')
-        .ilike('roll_number', rollNumber.trim())
+        .select('id, full_name, roll_number, bus_id, buses(bus_number)')
+        .ilike('roll_number', cleanRoll)
         .maybeSingle();
 
-      if (findErr || !foundStudent) {
-        return res.status(404).json({
-          success: false,
-          error: `Student with roll number "${rollNumber.trim()}" not found.`
-        });
+      if (matchedStudent) {
+        resolvedStudentId = matchedStudent.id;
+        if (!finalStudentName) {
+          finalStudentName = matchedStudent.full_name;
+        }
+        if (matchedStudent.buses?.bus_number) {
+          regularBusNumber = matchedStudent.buses.bus_number;
+        }
       }
-      resolvedStudentId = foundStudent.id;
-      studentObj = foundStudent;
-    } else if (resolvedStudentId) {
-      const { data: foundStudent, error: findErr } = await supabaseAdmin
-        .from('students')
-        .select('id, full_name, roll_number, bus_id')
-        .eq('id', resolvedStudentId)
-        .maybeSingle();
+    }
 
-      if (findErr || !foundStudent) {
-        return res.status(404).json({ success: false, error: 'Student not found.' });
-      }
-      studentObj = foundStudent;
-    } else {
-      return res.status(400).json({
-        success: false,
-        error: 'Either studentId or rollNumber must be provided.'
-      });
+    if (!finalStudentName) {
+      return res.status(400).json({ success: false, error: 'Student name is required.' });
     }
 
     // 2. Check if already marked standing on this date
-    const { data: existingLog } = await supabaseAdmin
+    let dupQuery = supabaseAdmin
       .from('daily_standing_log')
-      .select('id, bus_id, buses(bus_number)')
-      .eq('student_id', resolvedStudentId)
-      .eq('log_date', logDate)
-      .maybeSingle();
+      .select('id, bus_id, log_date, student_roll, student_name, buses(bus_number)')
+      .eq('log_date', logDate);
 
-    if (existingLog) {
+    if (resolvedStudentId) {
+      dupQuery = dupQuery.or(`student_id.eq.${resolvedStudentId},student_roll.ilike.${cleanRoll}`);
+    } else {
+      dupQuery = dupQuery.ilike('student_roll', cleanRoll);
+    }
+
+    const { data: existingLogs } = await dupQuery;
+    if (existingLogs && existingLogs.length > 0) {
+      const existing = existingLogs[0];
       return res.status(409).json({
         success: false,
-        error: `Student ${studentObj.full_name} (${studentObj.roll_number}) is already logged as standing today on Bus ${existingLog.buses?.bus_number || ''}.`
+        error: `Student ${finalStudentName} (${cleanRoll}) is already logged as standing today on Bus ${existing.buses?.bus_number || ''}.`
       });
     }
 
     // 3. Insert into daily_standing_log
+    const insertPayload = {
+      log_date: logDate,
+      bus_id: busId,
+      student_id: resolvedStudentId || null,
+      student_name: finalStudentName,
+      student_roll: cleanRoll,
+      daily_assignment_id: assignmentId || null,
+      standing_reason: normalizedReason,
+      recorded_by: staffId
+    };
+
     const { data: newLog, error: insertErr } = await supabaseAdmin
       .from('daily_standing_log')
-      .insert({
-        log_date: logDate,
-        bus_id: busId,
-        student_id: resolvedStudentId,
-        daily_assignment_id: assignmentId || null,
-        standing_reason: normalizedReason,
-        recorded_by: staffId
-      })
+      .insert(insertPayload)
       .select(`
         id,
         log_date,
         bus_id,
         student_id,
+        student_name,
+        student_roll,
         standing_reason,
         created_at
       `)
@@ -211,14 +222,15 @@ async function handleAddStandingStudent(req, res, next) {
 
     res.status(201).json({
       success: true,
-      message: `${studentObj.full_name} (${studentObj.roll_number}) recorded as standing for today.`,
+      message: `${finalStudentName} (${cleanRoll}) recorded as standing for today.`,
       standingStudent: {
         id: newLog.id,
         date: newLog.log_date,
         busId: newLog.bus_id,
         studentId: newLog.student_id,
-        studentName: studentObj.full_name,
-        rollNumber: studentObj.roll_number,
+        studentName: newLog.student_name || finalStudentName,
+        rollNumber: newLog.student_roll || cleanRoll,
+        regularBusNumber,
         standingReason: newLog.standing_reason,
         createdAt: newLog.created_at
       }

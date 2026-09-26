@@ -468,6 +468,8 @@ async function handleGetStandingReports(req, res, next) {
       .select(`
         id,
         log_date,
+        student_name,
+        student_roll,
         standing_reason,
         created_at,
         buses (
@@ -506,8 +508,8 @@ async function handleGetStandingReports(req, res, next) {
       date: r.log_date,
       busNumber: r.buses?.bus_number || 'N/A',
       routeName: r.buses?.route_name || 'N/A',
-      studentName: r.students?.full_name || 'Unknown',
-      rollNumber: r.students?.roll_number || 'N/A',
+      studentName: r.student_name || r.students?.full_name || 'Unknown',
+      rollNumber: r.student_roll || r.students?.roll_number || 'N/A',
       reason: r.standing_reason,
       recordedBy: r.staff_profiles?.full_name || 'Staff',
       createdAt: r.created_at

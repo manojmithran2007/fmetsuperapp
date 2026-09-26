@@ -515,7 +515,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('bus-modal-title').textContent = 'Add New Bus';
     document.getElementById('bus-form').reset();
     hideInlineAlert('bus-form-alert');
-    document.getElementById('bus-submit-btn').textContent = 'Add Bus';
+    const submitBtn = document.getElementById('bus-submit-btn');
+    if (submitBtn) {
+      window.Ui.setButtonLoading(submitBtn, false);
+      submitBtn.textContent = 'Add Bus';
+    }
     openModal('modal-bus-form');
   }
 
@@ -525,7 +529,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('bus-number-input').value         = btn.dataset.number;
     document.getElementById('bus-route-input').value          = btn.dataset.route;
     document.getElementById('bus-capacity-input').value       = btn.dataset.capacity;
-    document.getElementById('bus-submit-btn').textContent     = 'Save Changes';
+    const submitBtn = document.getElementById('bus-submit-btn');
+    if (submitBtn) {
+      window.Ui.setButtonLoading(submitBtn, false);
+      submitBtn.textContent = 'Save Changes';
+    }
     hideInlineAlert('bus-form-alert');
     openModal('modal-bus-form');
   }
@@ -537,12 +545,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     const submitBtn = document.getElementById('bus-submit-btn');
     hideInlineAlert('bus-form-alert');
 
-    const busNumber      = document.getElementById('bus-number-input').value.trim();
-    const routeName      = document.getElementById('bus-route-input').value.trim();
+    if (submitBtn && submitBtn.disabled) return;
+
+    const busNumber       = document.getElementById('bus-number-input').value.trim();
+    const routeName       = document.getElementById('bus-route-input').value.trim();
     const seatingCapacity = document.getElementById('bus-capacity-input').value.trim();
 
     if (!busNumber || !routeName || !seatingCapacity) {
       showInlineAlert('bus-form-alert', 'All fields are required.', 'error');
+      return;
+    }
+
+    const capNum = parseInt(seatingCapacity, 10);
+    if (isNaN(capNum) || capNum <= 0) {
+      showInlineAlert('bus-form-alert', 'Seating capacity must be a positive number.', 'error');
       return;
     }
 
@@ -551,17 +567,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       let res;
       if (_busEditId) {
-        res = await window.Api.updateBus(_busEditId, { busNumber, routeName, seatingCapacity });
+        res = await window.Api.updateBus(_busEditId, { busNumber, routeName, seatingCapacity: capNum });
       } else {
-        res = await window.Api.createBus({ busNumber, routeName, seatingCapacity });
+        res = await window.Api.createBus({ busNumber, routeName, seatingCapacity: capNum });
       }
+
+      // Reset form after successful submission
+      document.getElementById('bus-form').reset();
+      _busEditId = null;
+
       closeModal('modal-bus-form');
-      window.Ui.showAlert(BUS_ALERT, res.message, 'success');
-      loadBuses();
+      window.Ui.showAlert(BUS_ALERT, res.message || 'Bus saved successfully.', 'success');
+      window.Ui.showToast?.(res.message || 'Bus saved successfully.', 'success');
+
+      // Immediately display newly added bus in existing table
+      await loadBuses(document.getElementById('bus-search-input')?.value.trim() || '');
+      await loadBusesForDropdowns();
       refreshStats();
     } catch (err) {
-      showInlineAlert('bus-form-alert', err.message, 'error');
+      showInlineAlert('bus-form-alert', err.message || 'Failed to save bus.', 'error');
+    } finally {
       window.Ui.setButtonLoading(submitBtn, false);
+      if (submitBtn) {
+        submitBtn.textContent = _busEditId ? 'Save Changes' : 'Add Bus';
+      }
     }
   });
 
@@ -766,7 +795,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('student-form').reset();
     document.getElementById('student-bus-seat-section').style.display = 'block';
     document.getElementById('student-seat-hint').textContent = '';
-    document.getElementById('student-submit-btn').textContent = 'Add Student';
+    const submitBtn = document.getElementById('student-submit-btn');
+    if (submitBtn) {
+      window.Ui.setButtonLoading(submitBtn, false);
+      submitBtn.textContent = 'Add Student';
+    }
     hideInlineAlert('student-form-alert');
     _populateBusDropdowns();
     openModal('modal-student-form');
@@ -778,7 +811,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('student-name-input').value          = btn.dataset.name;
     document.getElementById('student-roll-input').value          = btn.dataset.roll;
     document.getElementById('student-bus-seat-section').style.display = 'none';
-    document.getElementById('student-submit-btn').textContent    = 'Save Changes';
+    const submitBtn = document.getElementById('student-submit-btn');
+    if (submitBtn) {
+      window.Ui.setButtonLoading(submitBtn, false);
+      submitBtn.textContent = 'Save Changes';
+    }
     hideInlineAlert('student-form-alert');
     openModal('modal-student-form');
   }
@@ -793,7 +830,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('assign-bus-select').value  = '';
     document.getElementById('assign-seat-input').value  = '';
     document.getElementById('assign-seat-info').textContent = '';
-    document.getElementById('assign-submit-btn').textContent = mode === 'move' ? 'Move Student' : 'Assign to Bus';
+    const submitBtn = document.getElementById('assign-submit-btn');
+    if (submitBtn) {
+      window.Ui.setButtonLoading(submitBtn, false);
+      submitBtn.textContent = mode === 'move' ? 'Move Student' : 'Assign to Bus';
+    }
     hideInlineAlert('assign-form-alert');
     _populateBusDropdowns();
     openModal('modal-assign-student');
@@ -824,6 +865,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const submitBtn = document.getElementById('student-submit-btn');
     hideInlineAlert('student-form-alert');
 
+    if (submitBtn && submitBtn.disabled) return;
+
     const fullName   = document.getElementById('student-name-input').value.trim();
     const rollNumber = document.getElementById('student-roll-input').value.trim();
 
@@ -843,13 +886,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         const seatNumber = document.getElementById('student-seat-input').value;
         res = await window.Api.createStudent({ fullName, rollNumber, busId, seatNumber });
       }
+
+      // Automatically reset form after successful submission
+      document.getElementById('student-form').reset();
+      _studentEditId = null;
+
       closeModal('modal-student-form');
-      window.Ui.showAlert(STU_ALERT, res.message, 'success');
-      loadStudents(_getStudentSearch(), _getStudentBusFilter());
+      window.Ui.showAlert(STU_ALERT, res.message || 'Student saved successfully.', 'success');
+      window.Ui.showToast?.(res.message || 'Student saved successfully.', 'success');
+
+      // Immediately display newly added student in existing table
+      await loadStudents(_getStudentSearch(), _getStudentBusFilter());
+      await loadBusesForDropdowns();
+      if (activeTab === 'buses') await loadBuses();
       refreshStats();
     } catch (err) {
-      showInlineAlert('student-form-alert', err.message, 'error');
+      showInlineAlert('student-form-alert', err.message || 'Failed to save student.', 'error');
+    } finally {
       window.Ui.setButtonLoading(submitBtn, false);
+      if (submitBtn) {
+        submitBtn.textContent = _studentEditId ? 'Save Changes' : 'Add Student';
+      }
     }
   });
 
@@ -857,6 +914,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     e.preventDefault();
     const submitBtn = document.getElementById('assign-submit-btn');
     hideInlineAlert('assign-form-alert');
+
+    if (submitBtn && submitBtn.disabled) return;
 
     const busId      = document.getElementById('assign-bus-select').value;
     const seatNumber = document.getElementById('assign-seat-input').value;
@@ -875,17 +934,22 @@ document.addEventListener('DOMContentLoaded', async () => {
       } else {
         res = await window.Api.assignStudent(_assignStudentId, { busId, seatNumber });
       }
+
+      document.getElementById('assign-form').reset();
       closeModal('modal-assign-student');
-      window.Ui.showAlert(STU_ALERT, res.message, 'success');
-      loadStudents(_getStudentSearch(), _getStudentBusFilter());
-      // Refresh bus tab if open so seat counts update
-      if (activeTab === 'buses') loadBuses();
+      window.Ui.showAlert(STU_ALERT, res.message || 'Assignment updated successfully.', 'success');
+      window.Ui.showToast?.(res.message || 'Assignment updated successfully.', 'success');
+      await loadStudents(_getStudentSearch(), _getStudentBusFilter());
+      if (activeTab === 'buses') await loadBuses();
       refreshStats();
-      // Invalidate bus dropdown cache
-      loadBusesForDropdowns();
+      await loadBusesForDropdowns();
     } catch (err) {
-      showInlineAlert('assign-form-alert', err.message, 'error');
+      showInlineAlert('assign-form-alert', err.message || 'Failed to assign bus.', 'error');
+    } finally {
       window.Ui.setButtonLoading(submitBtn, false);
+      if (submitBtn) {
+        submitBtn.textContent = _assignMode === 'move' ? 'Move Student' : 'Assign to Bus';
+      }
     }
   });
 

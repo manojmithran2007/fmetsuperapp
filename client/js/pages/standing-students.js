@@ -141,38 +141,64 @@ async function loadStandingList() {
 async function handleAddStanding(e) {
   e.preventDefault();
 
+  const nameInput = document.getElementById('standing-name');
   const rollInput = document.getElementById('standing-roll');
   const reasonSelect = document.getElementById('standing-reason');
   const addBtn = document.getElementById('add-standing-btn');
 
-  const rollNumber = rollInput.value.trim();
-  const reason = reasonSelect.value;
+  const studentName = nameInput ? nameInput.value.trim() : '';
+  const rollNumber = rollInput ? rollInput.value.trim() : '';
+  const reason = reasonSelect ? reasonSelect.value : '';
 
-  if (!rollNumber) {
-    window.UI?.showToast?.('Please enter a student roll number.', 'danger');
+  if (!studentName) {
+    window.UI?.showToast?.('Please enter a student name.', 'danger');
+    if (nameInput) nameInput.focus();
     return;
   }
 
+  if (!rollNumber) {
+    window.UI?.showToast?.('Please enter a student roll number.', 'danger');
+    if (rollInput) rollInput.focus();
+    return;
+  }
+
+  if (!reason) {
+    window.UI?.showToast?.('Please select a reason.', 'danger');
+    return;
+  }
+
+  if (addBtn.disabled) return;
+
   addBtn.disabled = true;
+  const originalText = addBtn.textContent;
   addBtn.textContent = 'Adding...';
 
   try {
     const payload = {
       busId: currentBusId,
       assignmentId: currentDuty?.id || null,
+      studentName,
       rollNumber,
       reason
     };
 
     const res = await window.Api.addStaffStandingStudent(payload);
     window.UI?.showToast?.(res.message || 'Standing student recorded successfully!', 'success');
-    rollInput.value = '';
+    
+    // Automatically reset input form after successful submission
+    if (nameInput) nameInput.value = '';
+    if (rollInput) rollInput.value = '';
+    if (reasonSelect) reasonSelect.selectedIndex = 0;
+    if (nameInput) nameInput.focus();
+
+    // Immediately display newly added record without page refresh
     await loadStandingList();
   } catch (err) {
+    // Preserve entered form data on failure
     window.UI?.showToast?.(err.message || 'Failed to record standing student', 'danger');
   } finally {
     addBtn.disabled = false;
-    addBtn.textContent = '+ Add Standing Student';
+    addBtn.textContent = originalText;
   }
 }
 

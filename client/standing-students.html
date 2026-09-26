@@ -110,22 +110,28 @@
       <div class="card" style="margin-bottom: var(--spacing-8);">
         <h2 style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-4);">Add Standing Student for Today</h2>
         
-        <form id="standing-form" class="grid grid-cols-3 gap-4" style="align-items: flex-end;">
+        <form id="standing-form" class="grid grid-cols-4 gap-4" style="align-items: flex-end;">
           <div class="form-group">
-            <label class="form-label" for="standing-roll">Student Roll Number *</label>
-            <input type="text" id="standing-roll" class="form-input" placeholder="e.g. 21CS045" required />
-            <p class="form-hint">Type roll number of any registered student.</p>
+            <label class="form-label" for="standing-name">Student Name *</label>
+            <input type="text" id="standing-name" class="form-input" placeholder="e.g. Rahul Sharma" required autocomplete="off" />
+            <p class="form-hint">Enter student's full name.</p>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="standing-reason">Fixed Reason *</label>
+            <label class="form-label" for="standing-roll">Student Roll Number *</label>
+            <input type="text" id="standing-roll" class="form-input" placeholder="e.g. 21CS045" required autocomplete="off" />
+            <p class="form-hint">Enter student's roll number.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="standing-reason">Reason *</label>
             <select id="standing-reason" class="form-select" required>
               <option value="temporary">Temporary</option>
               <option value="missed_regular_bus">Missed regular bus</option>
               <option value="route_change">Route change</option>
               <option value="no_capacity">No capacity</option>
             </select>
-            <p class="form-hint">Fixed collegiate operational categories.</p>
+            <p class="form-hint">Fixed operational standing reason.</p>
           </div>
 
           <div>
