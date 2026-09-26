@@ -1,0 +1,69 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/client/(.*)",
+      "destination": "/client/$1"
+    },
+    {
+      "source": "/",
+      "destination": "/client/index.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/client/login.html"
+    },
+    {
+      "source": "/register",
+      "destination": "/client/register.html"
+    },
+    {
+      "source": "/admin-dashboard",
+      "destination": "/client/admin-dashboard.html"
+    },
+    {
+      "source": "/staff-dashboard",
+      "destination": "/client/staff-dashboard.html"
+    },
+    {
+      "source": "/staff-bus",
+      "destination": "/client/staff-bus.html"
+    },
+    {
+      "source": "/bus-attendance",
+      "destination": "/client/bus-attendance.html"
+    },
+    {
+      "source": "/standing-students",
+      "destination": "/client/standing-students.html"
+    },
+    {
+      "source": "/today-report",
+      "destination": "/client/today-report.html"
+    },
+    {
+      "source": "/attendance-history",
+      "destination": "/client/attendance-history.html"
+    },
+    {
+      "source": "/unauthorized",
+      "destination": "/client/unauthorized.html"
+    },
+    {
+      "source": "/design-system",
+      "destination": "/client/design-system.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/client/$1"
+    }
+  ]
+}

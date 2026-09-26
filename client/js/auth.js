@@ -11,8 +11,8 @@ const Auth = {
   /**
    * Initialize Supabase Auth client if credentials and CDN library are available
    */
-  init() {
-    if (this.client) return this.client;
+  init(force = false) {
+    if (this.client && !force) return this.client;
 
     if (window.supabase && window.APP_CONFIG.isConfigured()) {
       try {
@@ -62,6 +62,9 @@ const Auth = {
    * Retrieve active session
    */
   async getSession() {
+    if (window.APP_CONFIG && window.APP_CONFIG.syncPromise) {
+      await window.APP_CONFIG.syncPromise;
+    }
     this.init();
     if (!this.client) return null;
     const { data, error } = await this.client.auth.getSession();
@@ -77,6 +80,9 @@ const Auth = {
    * Authenticate user with email and password via Supabase Auth
    */
   async login(email, password) {
+    if (window.APP_CONFIG && window.APP_CONFIG.syncPromise) {
+      await window.APP_CONFIG.syncPromise;
+    }
     this.init();
     if (!this.client) {
       throw new Error('Supabase client is not configured. Please enter your project keys in client/js/config.js and .env.');

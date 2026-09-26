@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve frontend static files from /client
 const clientPath = path.join(__dirname, '../client');
-app.use(express.static(clientPath));
+app.use(express.static(clientPath, { extensions: ['html'] }));
 
 // API Routes
 app.use('/api', healthRoutes);
@@ -31,19 +31,21 @@ app.get('/', (req, res) => {
 });
 
 // 404 Handler for API
-app.use('/api/*', notFoundHandler);
+app.use(['/api/*', '/api'], notFoundHandler);
 
 // Centralized Error Handler
 app.use(errorHandler);
 
-// Start Server
-const server = app.listen(env.PORT, () => {
-  console.log('================================================================');
-  console.log(`  COLLEGE BUS MANAGEMENT PLATFORM - PRODUCTION SERVER`);
-  console.log(`  Running on: http://localhost:${env.PORT}`);
-  console.log(`  Health API: http://localhost:${env.PORT}/api/health`);
-  console.log(`  Supabase:   ${env.isConfigured ? 'CONNECTED' : 'WAITING FOR CREDENTIALS IN .env'}`);
-  console.log('================================================================');
-});
+// Start Server locally if run directly (preserves npm start / dev and prevents EADDRINUSE in serverless)
+if (require.main === module) {
+  const server = app.listen(env.PORT, () => {
+    console.log('================================================================');
+    console.log(`  COLLEGE BUS MANAGEMENT PLATFORM - PRODUCTION SERVER`);
+    console.log(`  Running on: http://localhost:${env.PORT}`);
+    console.log(`  Health API: http://localhost:${env.PORT}/api/health`);
+    console.log(`  Supabase:   ${env.isConfigured ? 'CONNECTED' : 'WAITING FOR CREDENTIALS IN .env'}`);
+    console.log('================================================================');
+  });
+}
 
 module.exports = app;

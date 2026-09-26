@@ -1,15 +1,16 @@
 const dotenv = require('dotenv');
 const path = require('path');
 
-// Load .env from project root
+// Load .env from process.cwd() and fallback to explicit project root path
+dotenv.config();
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const env = {
   PORT: process.env.PORT || 5000,
-  SUPABASE_URL: process.env.SUPABASE_URL || '',
-  SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY || '',
-  SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
-  NODE_ENV: process.env.NODE_ENV || 'development'
+  SUPABASE_URL: (process.env.SUPABASE_URL || '').trim(),
+  SUPABASE_ANON_KEY: (process.env.SUPABASE_ANON_KEY || '').trim(),
+  SUPABASE_SERVICE_ROLE_KEY: (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim(),
+  NODE_ENV: (process.env.NODE_ENV || 'development').trim()
 };
 
 // Check if configuration is using placeholder values
